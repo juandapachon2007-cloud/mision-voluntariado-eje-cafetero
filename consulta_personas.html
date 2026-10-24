@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123b35">
+  <meta name="description" content="Consulta el equipo y las edificaciones del plan base de voluntariado del Eje Cafetero.">
+  <title>Consulta tu equipo | Misión Eje Cafetero</title>
+  <style>
+    :root {
+      --ink:#19332e; --muted:#65756f; --green:#123b35; --green2:#1b5b4d;
+      --mint:#eaf3ee; --paper:#f6f8f4; --white:#fff; --line:#dce6df;
+      --gold:#f1bf5c; --orange:#a55337; --shadow:0 15px 42px rgba(25,51,46,.08);
+    }
+    *{box-sizing:border-box}
+    [hidden]{display:none!important}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 "Segoe UI",Arial,sans-serif}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit}
+    .shell{width:min(1050px,calc(100% - 36px));margin:auto}
+    .topbar{background:rgba(246,248,244,.95);border-bottom:1px solid var(--line)}
+    .topbar-inner{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;letter-spacing:-.02em}
+    .brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--gold);color:var(--green);font-size:19px}
+    .toplink{color:var(--green2);font-weight:750;text-decoration:none;font-size:14px}
+    .hero{padding:32px 0 18px}
+    .hero-card{position:relative;overflow:hidden;padding:clamp(25px,5vw,48px);border-radius:26px;background:var(--green);color:white;box-shadow:var(--shadow)}
+    .hero-card:after{content:"";position:absolute;right:-80px;top:-150px;width:330px;height:330px;border:1px solid rgba(255,255,255,.15);border-radius:50%;box-shadow:0 0 0 33px rgba(255,255,255,.035),0 0 0 68px rgba(255,255,255,.025)}
+    .hero-copy{position:relative;z-index:1;max-width:760px}
+    .eyebrow{color:#bed9cf;text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:850}
+    h1{margin:12px 0 10px;font-size:clamp(34px,5vw,54px);line-height:1.05;letter-spacing:-.045em}
+    .hero p{max-width:690px;margin:0;color:#e0ebe6;font-size:17px}
+    .switcher{display:flex;gap:8px;margin:20px 0 14px;padding:6px;width:max-content;max-width:100%;border:1px solid var(--line);border-radius:14px;background:white;box-shadow:0 6px 20px rgba(25,51,46,.04)}
+    .switcher button{border:0;border-radius:10px;padding:10px 15px;background:transparent;color:var(--muted);font-weight:750}
+    .switcher button[aria-pressed="true"]{background:var(--green);color:white}
+    .panel{padding:clamp(18px,3vw,28px);border:1px solid var(--line);border-radius:21px;background:white;box-shadow:0 7px 22px rgba(25,51,46,.035)}
+    .lookup-panel{max-width:780px;margin:0 auto}
+    .section-title{margin:0;font-size:clamp(24px,3vw,30px);letter-spacing:-.035em;line-height:1.15}
+    .section-copy{margin:7px 0 20px;color:var(--muted)}
+    .search-row{display:grid;grid-template-columns:1fr auto;gap:9px}
+    .search-row input{min-width:0;min-height:50px;border:1px solid #cbd8d0;border-radius:13px;padding:11px 14px;color:var(--ink);background:white}
+    .search-row input:focus,.search-row button:focus-visible,.switcher button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid rgba(241,191,92,.88);outline-offset:2px}
+    .primary{min-height:50px;border:0;border-radius:13px;padding:10px 18px;background:var(--green);color:white;font-weight:800;transition:background .15s ease,transform .15s ease}
+    .primary:hover{background:var(--green2);transform:translateY(-1px)}
+    .help{margin:9px 0 0;color:var(--muted);font-size:13px}
+    .suggestions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+    .suggestions button{border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:var(--mint);color:var(--green);font-size:13px;font-weight:700}
+    .message{margin-top:16px;padding:14px 16px;border-radius:13px;background:#f3f6f3;color:var(--muted)}
+    .result{margin-top:17px}
+    .result-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:19px;border-radius:17px;background:var(--mint)}
+    .result-head h3{margin:0;font-size:24px;letter-spacing:-.03em;text-transform:capitalize}
+    .result-head p{margin:4px 0 0;color:var(--muted)}
+    .badge{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:6px 10px;border-radius:999px;background:#d9ecdf;color:#1b6045;font-size:12px;font-weight:850}
+    .result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+    .fact{padding:14px;border:1px solid var(--line);border-radius:13px;background:white}
+    .fact small{display:block;color:var(--muted);font-weight:700;font-size:12px}
+    .fact strong{display:block;margin-top:4px;font-size:17px}
+    .subhead{margin:21px 0 8px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+    .people{display:flex;flex-wrap:wrap;gap:8px}
+    .person-chip{padding:8px 11px;border:1px solid var(--line);border-radius:999px;background:white;font-size:14px;text-transform:capitalize}
+    .person-chip.me{border-color:var(--green);background:var(--green);color:white;font-weight:800}
+    .site-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px;margin:0;padding:0;list-style:none}
+    .site-list li{display:flex;gap:9px;align-items:flex-start;padding:9px 11px;border-radius:11px;background:#f4f7f4;font-size:14px}
+    .site-list li:before{content:"•";color:var(--green2);font-weight:900}
+    .notice{margin-top:13px;padding:12px 14px;border-left:4px solid var(--gold);border-radius:0 11px 11px 0;background:#fff8e8;color:#66583a;font-size:13px}
+    .not-assigned{margin-top:15px;padding:18px;border:1px solid #eed8a8;border-radius:15px;background:#fff8e8}
+    .not-assigned strong{display:block;font-size:17px;color:#5c4b28}
+    .not-assigned p{margin:5px 0 0;color:#766647}
+    .coord-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:28px 0 15px}
+    .coord-head h2{margin:0;font-size:30px;letter-spacing:-.035em}
+    .coord-head p{max-width:570px;margin:6px 0 0;color:var(--muted)}
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .metric{padding:17px;border:1px solid var(--line);border-radius:16px;background:white}
+    .metric span{display:block;color:var(--muted);font-size:12px;font-weight:750}
+    .metric strong{display:block;margin-top:4px;font-size:26px;line-height:1.15;letter-spacing:-.04em}
+    .city-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:13px 0 18px}
+    .city{padding:16px;border:1px solid var(--line);border-radius:16px;background:white}
+    .city-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+    .city-top strong{font-size:16px}
+    .city-top span{color:var(--muted);font-size:13px}
+    .track{height:9px;margin-top:11px;overflow:hidden;border-radius:999px;background:#e8efea}
+    .fill{height:100%;border-radius:inherit;background:var(--green2)}
+    .team-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+    .team{border:1px solid var(--line);border-radius:15px;background:white;overflow:hidden}
+    .team summary{list-style:none;cursor:pointer;padding:15px}
+    .team summary::-webkit-details-marker{display:none}
+    .team summary:after{content:"+";float:right;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--mint);color:var(--green);font-weight:850}
+    .team[open] summary:after{content:"−"}
+    .team-name{font-weight:850}
+    .team-meta{display:block;margin-top:5px;color:var(--muted);font-size:13px}
+    .team-body{padding:0 15px 15px}
+    .team-body h4{margin:9px 0 5px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.07em}
+    .team-body p{margin:0;font-size:14px;text-transform:capitalize}
+    .team-body ul{margin:0;padding-left:18px;font-size:14px}
+    .full-link{display:inline-flex;margin-top:15px;padding:10px 14px;border:1px solid var(--line);border-radius:11px;color:var(--green2);background:white;text-decoration:none;font-weight:800}
+    .footer{padding:24px 0 38px;color:var(--muted);font-size:13px}
+    .footer-inner{border-top:1px solid var(--line);padding-top:16px;display:flex;justify-content:space-between;gap:18px;align-items:start}
+    .footer p{max-width:760px;margin:0}
+    @media(max-width:760px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.team-list{grid-template-columns:1fr}.coord-head{display:block}}
+    @media(max-width:560px){.shell{width:min(100% - 26px,1050px)}.hero{padding-top:18px}.hero-card{border-radius:21px}.topbar-inner{min-height:58px}.toplink{font-size:12px}.switcher{width:100%}.switcher button{flex:1;padding-inline:8px;font-size:13px}.search-row{grid-template-columns:1fr}.result-head{display:block}.badge{margin-top:11px}.result-grid{grid-template-columns:1fr}.site-list{grid-template-columns:1fr}.city-grid{grid-template-columns:1fr}.footer-inner{display:block}.footer p{margin-bottom:10px}}
+    @media print{.topbar,.switcher,.search-row,.help,.full-link{display:none!important}.hero{padding-top:0}.hero-card{box-shadow:none;print-color-adjust:exact}.shell{width:100%}.panel,.metric,.city,.team{break-inside:avoid}.team-list{grid-template-columns:1fr 1fr}details:not([open])>:not(summary){display:block!important}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true">✳</span><span>Misión Eje Cafetero</span></a>
+      <a class="toplink" href="index.html">Ver resultados completos ↗</a>
+    </div>
+  </header>
+
+  <main id="inicio" class="shell">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-copy">
+          <div class="eyebrow">Consulta rápida del plan base</div>
+          <h1>Encuentra tu equipo</h1>
+          <p>Escribe tu nombre para consultar la asignación propuesta, la ciudad y las edificaciones de tu equipo. Si estás coordinando, cambia a la vista de coordinación.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="switcher" role="group" aria-label="Elegir tipo de consulta">
+      <button type="button" id="volunteerTab" aria-pressed="true">Soy voluntario/a</button>
+      <button type="button" id="coordTab" aria-pressed="false">Soy de coordinación</button>
+    </div>
+
+    <section id="volunteerView" aria-labelledby="lookupTitle">
+      <div class="panel lookup-panel">
+        <h2 class="section-title" id="lookupTitle">Consulta por nombre</h2>
+        <p class="section-copy">Elige tu nombre o empieza a escribirlo. También puedes escribirlo sin tildes.</p>
+        <div class="search-row">
+          <input id="nameInput" type="search" list="volunteerNames" autocomplete="off" placeholder="Ejemplo: Andreina Espinel" aria-label="Nombre del voluntario">
+          <datalist id="volunteerNames"></datalist>
+          <button id="searchButton" class="primary" type="button">Consultar</button>
+        </div>
+        <p class="help">La consulta muestra el caso base del modelo. Las fechas y el horario final deben confirmarse con coordinación.</p>
+        <div id="suggestions" class="suggestions" aria-live="polite"></div>
+        <div id="searchMessage" class="message" aria-live="polite">Tu resultado aparecerá aquí.</div>
+        <div id="volunteerResult" class="result" hidden aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="coordView" hidden aria-labelledby="coordTitle">
+      <div class="coord-head">
+        <div><h2 id="coordTitle">Vista de coordinación</h2><p>Resumen operativo del caso base: cinco equipos, 34 edificaciones planeadas y $100.000 de presupuesto sin asignar.</p></div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span>Edificaciones planeadas</span><strong>34 / 40</strong></div>
+        <div class="metric"><span>Equipos activos</span><strong>5</strong></div>
+        <div class="metric"><span>Voluntarios seleccionados</span><strong>18</strong></div>
+        <div class="metric"><span>Costo estimado</span><strong style="font-size:22px">$9.900.000</strong></div>
+      </div>
+      <div class="city-grid" id="coordCities"></div>
+      <div class="team-list" id="coordTeams"></div>
+      <a class="full-link" href="index.html">Abrir escenarios y resultados detallados →</a>
+    </section>
+
+    <div class="notice">Esta página presenta una propuesta de asignación; no confirma que las inspecciones ya se hayan realizado. El plan asigna edificaciones a equipos, no a una persona individual.</div>
+  </main>
+
+  <footer class="shell footer">
+    <div class="footer-inner">
+      <p>Fuente: asignaciones, equipos, edificaciones y voluntarios del libro de resultados del proyecto. La solución base fue resuelta con GAMS y CPLEX. La información se muestra localmente en esta página.</p>
+      <a class="toplink" href="#inicio">Volver arriba ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    const volunteers = [
+      ["V01","ADRIANA PERTEGAS","Civil general","Inicial","T06"],
+      ["V02","YINEY CONTRERAS","Civil general","Intermedia",null],
+      ["V03","ANDREINA ESPINEL","Civil general","Inicial","T04"],
+      ["V04","ANDRES LARA","Civil general","Intermedia","T10"],
+      ["V05","FERNANDO ANTOLINEZ","Civil general","Inicial","T06"],
+      ["V06","NINFA GARAY","Civil general","Intermedia",null],
+      ["V07","OLGA SUAREZ","Civil general","Inicial","T09"],
+      ["V08","OSCAR PEÑARANDA","Civil general","Intermedia","T07"],
+      ["V09","RONALD BAEZ","Civil general","Inicial","T10"],
+      ["V10","RUTH LEAL","Civil general","Intermedia","T09"],
+      ["V11","SILVIA PLAZAS","Civil general","Inicial","T07"],
+      ["V12","VICTOR RODRIGUEZ","Civil general","Intermedia","T04"],
+      ["V13","YAJAIRA VELOZA","Estructuras","Avanzada","T06"],
+      ["V14","YANITH CUELLAR","Estructuras","Avanzada",null],
+      ["V15","CAMILA ANDREA MORALES","Estructuras","Avanzada","T10"],
+      ["V16","JUAN PABLO HERRERA","Estructuras","Avanzada",null],
+      ["V17","LAURA VALENTINA CASTRO","Estructuras","Avanzada","T07"],
+      ["V18","DANIEL FELIPE VARGAS","Estructuras","Avanzada",null],
+      ["V19","MARIANA LOPEZ TORRES","Estructuras","Avanzada",null],
+      ["V20","SANTIAGO ANDRES ROJAS","Estructuras","Inicial","T04"],
+      ["V21","PAULA ANDREA MENDOZA","Estructuras","Intermedia",null],
+      ["V22","NICOLAS EDUARDO PINEDA","Estructuras","Inicial",null],
+      ["V23","VALERIA ISABEL RAMIREZ","Estructuras","Intermedia",null],
+      ["V24","SEBASTIAN DAVID ORTIZ","Estructuras","Inicial","T09"],
+      ["V25","CATALINA MARIA SUAREZ","Geotecnia","Intermedia",null],
+      ["V26","MIGUEL ANGEL CARDENAS","Geotecnia","Inicial","T10"],
+      ["V27","DIANA CAROLINA GUTIERREZ","Geotecnia","Intermedia",null],
+      ["V28","ALEJANDRO JOSE MEDINA","Geotecnia","Avanzada",null],
+      ["V29","NATALIA FERNANDA REYES","Geotecnia","Avanzada","T09"],
+      ["V30","FELIPE ESTEBAN SALAZAR","Geotecnia","Avanzada","T04"]
+    ].map(([id,name,profile,experience,team]) => ({id,name,profile,experience,team}));
+
+    const teams = [
+      {id:"T04",name:"Equipo 4",city:"Pereira",hours:24,score:63,cost:2250000,sites:["Casa Los Cedros","Edificio Los Pinos","Colegio Los Cedros","Colegio El Mirador","Colegio Los Robles","Centro Comunitario Las Acacias"]},
+      {id:"T06",name:"Equipo 6",city:"Pereira",hours:21,score:50,cost:1550000,sites:["Casa Las Acacias","Casa La Esperanza","Casa Los Robles","Casa Los Arrayanes","Casa Los Olivos","Edificio El Mirador","Edificio La Primavera","Centro Comunitario Los Cedros"]},
+      {id:"T07",name:"Equipo 7",city:"Manizales",hours:21,score:56,cost:1600000,sites:["Casa Las Camelias","Casa El Encanto","Casa El Paraiso","Edificio Los Arrayanes","Edificio El Jardin","Edificio El Refugio","Centro Comunitario Los Robles"]},
+      {id:"T09",name:"Equipo 9",city:"Armenia",hours:24,score:74,cost:2250000,sites:["Casa La Florida","Casa La Alameda","Edificio Los Olivos","Colegio Los Arrayanes","Colegio La Aurora","Centro Comunitario La Primavera","Centro Comunitario El Porvenir"]},
+      {id:"T10",name:"Equipo 10",city:"Manizales",hours:24,score:66,cost:2250000,sites:["Casa Los Nogales","Edificio La Aurora","Colegio La Primavera","Colegio El Porvenir","Colegio La Colina","Centro Comunitario Los Pinos"]}
+    ];
+
+    const cities = [{name:"Pereira",assigned:14,total:18},{name:"Manizales",assigned:13,total:13},{name:"Armenia",assigned:7,total:9}];
+    const normalize = value => value.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleUpperCase("es-CO").replace(/[^A-Z0-9 ]/g," ").replace(/\s+/g," ").trim();
+    const titleCase = value => value.toLocaleLowerCase("es-CO").replace(/(^|\s)\S/g, letter => letter.toLocaleUpperCase("es-CO"));
+    const teamVolunteers = id => volunteers.filter(person => person.team === id);
+    const datalist = document.getElementById("volunteerNames");
+    datalist.innerHTML = volunteers.map(person => `<option value="${person.name}"></option>`).join("");
+
+    function showMessage(text) {
+      const message = document.getElementById("searchMessage");
+      message.textContent = text;
+      message.hidden = false;
+      document.getElementById("volunteerResult").hidden = true;
+    }
+
+    function renderVolunteer(person) {
+      const container = document.getElementById("volunteerResult");
+      const message = document.getElementById("searchMessage");
+      message.hidden = true;
+      const suggestions = document.getElementById("suggestions");
+      suggestions.innerHTML = "";
+      if (!person.team) {
+        container.innerHTML = `
+          <div class="result-head"><div><h3>${person.name}</h3><p>${person.profile} · Experiencia ${person.experience.toLocaleLowerCase("es-CO")}</p></div><span class="badge" style="background:#fff0d1;color:#795c19">Sin equipo en caso base</span></div>
+          <div class="not-assigned"><strong>No aparece en uno de los equipos activos del plan base.</strong><p>Esto solo describe la solución de referencia. La coordinación puede revisar los otros escenarios y confirmar si habrá una asignación diferente.</p></div>`;
+        container.hidden = false;
+        return;
+      }
+      const team = teams.find(item => item.id === person.team);
+      const members = teamVolunteers(team.id);
+      container.innerHTML = `
+        <div class="result-head"><div><h3>${person.name}</h3><p>${person.profile} · Experiencia ${person.experience.toLocaleLowerCase("es-CO")}</p></div><span class="badge">✓ Asignación propuesta</span></div>
+        <div class="result-grid">
+          <div class="fact"><small>Equipo</small><strong>${team.name}</strong></div>
+          <div class="fact"><small>Ciudad</small><strong>${team.city}</strong></div>
+          <div class="fact"><small>Jornada estimada del equipo</small><strong>${team.hours} horas</strong></div>
+        </div>
+        <h4 class="subhead">Compañeros de equipo</h4>
+        <div class="people">${members.map(member => `<span class="person-chip ${member.id === person.id ? "me" : ""}">${member.name}${member.id === person.id ? " · tú" : ""}</span>`).join("")}</div>
+        <h4 class="subhead">Edificaciones a cargo del equipo · ${team.sites.length}</h4>
+        <ul class="site-list">${team.sites.map(site => `<li>${site}</li>`).join("")}</ul>
+        <div class="notice">Las edificaciones y horas se asignan al equipo completo. El modelo no define qué integrante visita cada lugar ni las fechas de trabajo.</div>`;
+      container.hidden = false;
+    }
+
+    function findVolunteer() {
+      const input = document.getElementById("nameInput");
+      const query = normalize(input.value);
+      const suggestions = document.getElementById("suggestions");
+      suggestions.innerHTML = "";
+      if (!query) { showMessage("Escribe tu nombre para consultar la asignación."); return; }
+      const exact = volunteers.find(person => normalize(person.name) === query);
+      if (exact) { renderVolunteer(exact); return; }
+      const matches = volunteers.filter(person => normalize(person.name).includes(query));
+      if (matches.length === 1) { input.value = titleCase(matches[0].name); renderVolunteer(matches[0]); return; }
+      if (matches.length > 1) {
+        showMessage("Hay varios nombres parecidos. Elige el tuyo:");
+        suggestions.innerHTML = matches.map(person => `<button type="button" data-volunteer="${person.id}">${titleCase(person.name)}</button>`).join("");
+        suggestions.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
+          const chosen = volunteers.find(person => person.id === button.dataset.volunteer);
+          input.value = titleCase(chosen.name);
+          renderVolunteer(chosen);
+        }));
+        return;
+      }
+      showMessage("No encontramos ese nombre en la lista del proyecto. Revisa la escritura o consulta con coordinación.");
+    }
+
+    function renderCoordinator() {
+      document.getElementById("coordCities").innerHTML = cities.map(city => {
+        const pct = Math.round(city.assigned / city.total * 100);
+        return `<article class="city"><div class="city-top"><strong>${city.name}</strong><span>${city.assigned}/${city.total} · ${pct}%</span></div><div class="track" aria-label="${city.name}: ${city.assigned} de ${city.total}"><div class="fill" style="width:${pct}%"></div></div></article>`;
+      }).join("");
+      document.getElementById("coordTeams").innerHTML = teams.map(team => {
+        const members = teamVolunteers(team.id);
+        return `<details class="team"><summary><span class="team-name">${team.name} · ${team.city}</span><span class="team-meta">${members.length} personas · ${team.sites.length} edificios · ${team.hours} h · ${team.score} puntos</span></summary><div class="team-body"><h4>Voluntarios</h4><p>${members.map(person => person.name).join(" · ")}</p><h4>Edificaciones asignadas</h4><ul>${team.sites.map(site => `<li>${site}</li>`).join("")}</ul></div></details>`;
+      }).join("");
+    }
+
+    const volunteerView = document.getElementById("volunteerView");
+    const coordView = document.getElementById("coordView");
+    const volunteerTab = document.getElementById("volunteerTab");
+    const coordTab = document.getElementById("coordTab");
+    volunteerTab.addEventListener("click", () => { volunteerView.hidden = false; coordView.hidden = true; volunteerTab.setAttribute("aria-pressed","true"); coordTab.setAttribute("aria-pressed","false"); });
+    coordTab.addEventListener("click", () => { volunteerView.hidden = true; coordView.hidden = false; volunteerTab.setAttribute("aria-pressed","false"); coordTab.setAttribute("aria-pressed","true"); });
+    document.getElementById("searchButton").addEventListener("click", findVolunteer);
+    document.getElementById("nameInput").addEventListener("keydown", event => { if (event.key === "Enter") findVolunteer(); });
+    document.getElementById("nameInput").addEventListener("input", () => { document.getElementById("suggestions").innerHTML = ""; });
+    renderCoordinator();
+  </script>
+</body>
+</html>
+
