@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123b35">
+  <meta name="description" content="Resumen interactivo del plan de voluntariado para inspecciones en Pereira, Manizales y Armenia.">
+  <title>Plan de voluntariado | Eje Cafetero</title>
+  <style>
+    :root {
+      --ink: #172f2b;
+      --muted: #5f716c;
+      --green: #123b35;
+      --green-2: #1c5b4f;
+      --mint: #dcece5;
+      --mint-2: #eef5f1;
+      --paper: #f7f8f4;
+      --white: #fff;
+      --line: #dce5df;
+      --sun: #f1bd56;
+      --coral: #c45c46;
+      --shadow: 0 16px 42px rgba(23, 47, 43, .08);
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Segoe UI", Arial, sans-serif;
+      line-height: 1.55;
+    }
+    button, select, input { font: inherit; }
+    button, select { cursor: pointer; }
+    a { color: inherit; }
+    .shell { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 5;
+      background: rgba(247, 248, 244, .94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(220, 229, 223, .8);
+    }
+    .topbar-inner { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; font-weight: 750; letter-spacing: -.02em; }
+    .brand-mark { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; color: var(--green); background: var(--sun); font-size: 18px; }
+    .nav { display: flex; align-items: center; gap: 22px; color: var(--muted); font-size: 14px; }
+    .nav a { text-decoration: none; }
+    .nav a:hover { color: var(--green); }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 42px; padding: 9px 15px; border-radius: 12px; border: 1px solid transparent;
+      background: var(--green); color: white; font-weight: 700; text-decoration: none;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .button:hover { background: var(--green-2); transform: translateY(-1px); }
+    .button.secondary { background: white; color: var(--green); border-color: var(--line); }
+    .button.secondary:hover { background: var(--mint-2); }
+    .hero { padding: 44px 0 28px; }
+    .hero-card {
+      position: relative; overflow: hidden; min-height: 300px; border-radius: 28px;
+      padding: clamp(26px, 5vw, 54px); background: var(--green); color: white;
+      box-shadow: var(--shadow); display: grid; grid-template-columns: 1.35fr .65fr; align-items: center; gap: 24px;
+    }
+    .hero-card::after { content: ""; position: absolute; width: 360px; height: 360px; border: 1px solid rgba(255,255,255,.13); border-radius: 50%; right: -90px; top: -130px; box-shadow: 0 0 0 34px rgba(255,255,255,.035), 0 0 0 72px rgba(255,255,255,.025); }
+    .hero-copy, .hero-stamp { position: relative; z-index: 1; }
+    .eyebrow { color: #b8d7cb; text-transform: uppercase; font-size: 12px; letter-spacing: .15em; font-weight: 800; }
+    h1 { margin: 13px 0 14px; max-width: 700px; font-size: clamp(34px, 5.2vw, 58px); line-height: 1.04; letter-spacing: -.045em; }
+    .hero-copy p { margin: 0; max-width: 630px; color: #e0ece7; font-size: clamp(16px, 2vw, 19px); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .hero-actions .button { background: var(--sun); color: var(--green); }
+    .hero-actions .button:hover { background: #ffd475; }
+    .hero-actions .button.secondary { color: white; border-color: rgba(255,255,255,.3); background: transparent; }
+    .hero-stamp { justify-self: end; text-align: center; width: min(220px, 100%); padding: 22px; border: 1px solid rgba(255,255,255,.25); border-radius: 22px; background: rgba(255,255,255,.07); }
+    .hero-stamp strong { display: block; font-size: 55px; line-height: 1; letter-spacing: -.06em; color: var(--sun); }
+    .hero-stamp span { display: block; margin-top: 10px; color: #e0ece7; font-size: 14px; }
+    .section { padding: 24px 0 32px; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 19px; }
+    .section-head h2 { margin: 0; font-size: clamp(25px, 3vw, 34px); line-height: 1.15; letter-spacing: -.035em; }
+    .section-head p { max-width: 570px; margin: 8px 0 0; color: var(--muted); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .kpi { padding: 20px; border: 1px solid var(--line); border-radius: 18px; background: var(--white); box-shadow: 0 6px 20px rgba(23,47,43,.035); }
+    .kpi-label { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .kpi-value { display: block; margin-top: 6px; font-size: clamp(25px, 3vw, 34px); line-height: 1.1; letter-spacing: -.045em; font-weight: 800; }
+    .kpi-note { margin-top: 7px; color: var(--muted); font-size: 13px; }
+    .callout { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; margin-top: 16px; padding: 17px 19px; border: 1px solid #e8d9b4; border-radius: 16px; background: #fff8e9; }
+    .callout-mark { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: var(--green); background: var(--sun); font-weight: 900; }
+    .callout strong { display: block; margin-bottom: 2px; }
+    .callout p { margin: 0; color: #5e594b; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .panel { padding: 23px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); box-shadow: 0 6px 20px rgba(23,47,43,.035); }
+    .panel h3 { margin: 0; font-size: 20px; letter-spacing: -.025em; }
+    .panel-intro { margin: 5px 0 18px; color: var(--muted); font-size: 14px; }
+    .city-list { display: grid; gap: 18px; }
+    .city-row { display: grid; gap: 7px; }
+    .city-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .city-name { font-weight: 750; }
+    .city-count { color: var(--muted); font-size: 13px; white-space: nowrap; }
+    .bar-track { height: 10px; border-radius: 999px; background: #e8eeea; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: inherit; background: var(--green-2); transition: width .25s ease; }
+    .city-note { color: var(--muted); font-size: 12px; }
+    .budget-summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0 14px; }
+    .budget-summary strong { font-size: 24px; letter-spacing: -.03em; }
+    .budget-summary span { color: var(--muted); font-size: 13px; }
+    .budget-track { height: 15px; border-radius: 999px; background: #e8eeea; overflow: hidden; }
+    .budget-fill { height: 100%; width: 99%; background: var(--green-2); border-radius: inherit; }
+    .budget-legend { display: flex; justify-content: space-between; gap: 8px; margin-top: 9px; color: var(--muted); font-size: 12px; }
+    .budget-left { display: flex; align-items: center; gap: 8px; margin-top: 19px; padding: 12px 14px; border-radius: 12px; background: var(--mint-2); color: var(--green); font-weight: 750; }
+    .budget-left span { font-weight: 500; color: var(--muted); }
+    .recommend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .recommend { padding: 19px; border-radius: 17px; background: var(--mint-2); }
+    .recommend.alt { background: #fff5df; }
+    .recommend-kicker { color: var(--green-2); text-transform: uppercase; letter-spacing: .1em; font-size: 11px; font-weight: 800; }
+    .recommend h4 { margin: 6px 0; font-size: 17px; }
+    .recommend p { margin: 0; color: var(--muted); font-size: 14px; }
+    .scenario-wrap { display: grid; grid-template-columns: minmax(220px, .72fr) 1.28fr; gap: 18px; }
+    .scenario-control { display: grid; align-content: start; gap: 9px; }
+    .scenario-control label { font-weight: 750; font-size: 14px; }
+    select, input[type="search"] { width: 100%; border: 1px solid #cbd8d0; border-radius: 12px; background: white; color: var(--ink); min-height: 46px; padding: 10px 13px; }
+    select:focus, input:focus, button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid rgba(241,189,86,.8); outline-offset: 2px; }
+    .scenario-control small { color: var(--muted); }
+    .scenario-result { padding: 22px; border-radius: 18px; background: var(--green); color: white; }
+    .scenario-result-top { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+    .scenario-result h3 { margin: 0; font-size: 22px; }
+    .scenario-result p { margin: 5px 0 0; color: #d9e7e1; font-size: 14px; }
+    .status-pill { padding: 6px 9px; border-radius: 999px; color: var(--green); background: var(--sun); font-size: 11px; font-weight: 850; white-space: nowrap; }
+    .scenario-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 19px; }
+    .scenario-kpi { padding: 13px; border: 1px solid rgba(255,255,255,.18); border-radius: 13px; background: rgba(255,255,255,.07); }
+    .scenario-kpi span { display: block; color: #c9ddd4; font-size: 11px; }
+    .scenario-kpi strong { display: block; margin-top: 4px; font-size: 20px; line-height: 1.15; }
+    .scenario-foot { margin-top: 13px; color: #d9e7e1; font-size: 13px; }
+    .scenario-foot strong { color: white; }
+    .mini-city { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+    .mini-city span { padding: 5px 9px; border-radius: 999px; background: rgba(255,255,255,.1); color: #edf6f1; font-size: 12px; }
+    .table-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 12px 0 15px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 9px; flex: 1; }
+    .filters input { max-width: 320px; }
+    .filters select { width: auto; min-width: 170px; }
+    .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 15px; background: white; }
+    table { width: 100%; border-collapse: collapse; min-width: 740px; }
+    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #edf1ee; vertical-align: top; }
+    th { position: sticky; top: 0; z-index: 1; color: #52645e; background: #f0f5f1; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    td { font-size: 14px; }
+    tbody tr:last-child td { border-bottom: 0; }
+    .tag { display: inline-flex; padding: 3px 8px; border-radius: 999px; background: var(--mint-2); color: var(--green-2); font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .team-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 13px; }
+    .team-card { border: 1px solid var(--line); border-radius: 16px; background: white; overflow: hidden; }
+    .team-card summary { list-style: none; cursor: pointer; padding: 16px; }
+    .team-card summary::-webkit-details-marker { display: none; }
+    .team-card summary::after { content: "+"; float: right; width: 27px; height: 27px; border-radius: 50%; display: grid; place-items: center; background: var(--mint-2); color: var(--green); font-weight: 800; }
+    .team-card[open] summary::after { content: "−"; }
+    .team-title { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 800; }
+    .team-city { color: var(--green-2); font-size: 12px; }
+    .team-meta { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 7px; }
+    .team-meta span { padding: 4px 8px; border-radius: 8px; background: #f2f5f2; color: var(--muted); font-size: 12px; }
+    .team-detail { padding: 0 16px 16px; }
+    .team-detail h4 { margin: 10px 0 5px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .team-detail p { margin: 0; font-size: 14px; }
+    .team-detail ul { margin: 0; padding-left: 18px; columns: 2; font-size: 14px; }
+    .team-detail li { break-inside: avoid; padding: 2px 0; }
+    .empty-state { display: none; padding: 20px; text-align: center; color: var(--muted); }
+    details.info { border: 1px solid var(--line); border-radius: 16px; background: white; }
+    details.info + details.info { margin-top: 10px; }
+    details.info summary { cursor: pointer; padding: 16px 18px; font-weight: 750; }
+    .info-body { padding: 0 18px 17px; color: var(--muted); }
+    .info-body p { margin: 0 0 10px; }
+    .info-body p:last-child { margin-bottom: 0; }
+    .info-body ul { margin: 7px 0; padding-left: 20px; }
+    .note-box { border-left: 4px solid var(--coral); padding: 12px 14px; background: #fff2ee; border-radius: 0 12px 12px 0; color: #644a43; }
+    footer { padding: 28px 0 42px; color: var(--muted); font-size: 13px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: start; gap: 24px; border-top: 1px solid var(--line); padding-top: 18px; }
+    .footer-inner p { max-width: 750px; margin: 0; }
+    .to-top { color: var(--green-2); font-weight: 750; text-decoration: none; white-space: nowrap; }
+    @media (max-width: 840px) {
+      .hero-card { grid-template-columns: 1fr; }
+      .hero-stamp { justify-self: start; width: 190px; }
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .scenario-wrap { grid-template-columns: 1fr; }
+      .scenario-kpis { grid-template-columns: repeat(2, 1fr); }
+      .nav { gap: 13px; }
+      .nav a:nth-child(3) { display: none; }
+    }
+    @media (max-width: 620px) {
+      .shell { width: min(100% - 28px, 1120px); }
+      .topbar-inner { min-height: 60px; }
+      .nav { display: none; }
+      .hero { padding-top: 22px; }
+      .hero-card { padding: 25px 21px; border-radius: 22px; }
+      .hero-stamp { width: 160px; padding: 15px; }
+      .hero-stamp strong { font-size: 45px; }
+      .section { padding: 18px 0 24px; }
+      .section-head { display: block; }
+      .two-col, .recommend-grid, .team-grid { grid-template-columns: 1fr; }
+      .panel { padding: 18px; }
+      .kpi { padding: 15px; }
+      .kpi-note { font-size: 12px; }
+      .scenario-result { padding: 18px; }
+      .scenario-result-top { display: block; }
+      .status-pill { display: inline-flex; margin-top: 10px; }
+      .table-toolbar { align-items: stretch; }
+      .filters { display: grid; }
+      .filters input, .filters select { width: 100%; max-width: none; }
+      .team-detail ul { columns: 1; }
+      .footer-inner { display: block; }
+      .to-top { display: inline-block; margin-top: 12px; }
+    }
+    @media print {
+      body { background: white; }
+      .topbar, .hero-actions, .table-toolbar, .to-top { display: none !important; }
+      .shell { width: 100%; }
+      .hero { padding-top: 0; }
+      .hero-card { box-shadow: none; print-color-adjust: exact; }
+      .panel, .kpi { box-shadow: none; break-inside: avoid; }
+      .section { padding-block: 13px; }
+      details:not([open]) > :not(summary) { display: block !important; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; font-size: 10px; }
+      th, td { padding: 6px; }
+      .team-card { break-inside: avoid; }
+      footer { padding-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="#inicio" aria-label="Volver al inicio">
+        <span class="brand-mark" aria-hidden="true">✳</span>
+        <span>Misión Eje Cafetero</span>
+      </a>
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="#resultado">Resultado</a>
+        <a href="#escenarios">Escenarios</a>
+        <a href="#equipos">Equipos</a>
+        <a href="consulta_personas.html">Consulta por nombre</a>
+      </nav>
+      <button class="button secondary" type="button" onclick="window.print()">Imprimir resumen</button>
+    </div>
+  </header>
+
+  <main id="inicio">
+    <section class="hero shell" aria-labelledby="page-title">
+      <div class="hero-card">
+        <div class="hero-copy">
+          <div class="eyebrow">Plan de inspecciones · Pereira · Manizales · Armenia</div>
+          <h1 id="page-title">Una misión clara. Equipos listos para actuar.</h1>
+          <p>El modelo propone dónde concentrar el voluntariado para atender las edificaciones prioritarias dentro del presupuesto disponible.</p>
+          <div class="hero-actions">
+            <a class="button" href="#resultado">Ver el plan recomendado <span aria-hidden="true">↓</span></a>
+            <a class="button secondary" href="#equipos">Consultar equipos</a>
+          </div>
+        </div>
+        <div class="hero-stamp" aria-label="Cobertura planeada del 85 por ciento">
+          <strong>85%</strong>
+          <span>de las edificaciones incluidas en el plan base</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="resultado" aria-labelledby="result-title">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color:var(--green-2)">La decisión en un vistazo</div>
+          <h2 id="result-title">El plan recomendado</h2>
+          <p>Una propuesta factible con óptimo probado para el presupuesto base de $10 millones.</p>
+        </div>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi"><span class="kpi-label">Edificaciones planeadas</span><strong class="kpi-value">34 <span style="font-size:.55em;color:var(--muted);font-weight:650">/ 40</span></strong><div class="kpi-note">85% del inventario disponible</div></article>
+        <article class="kpi"><span class="kpi-label">Equipos activos</span><strong class="kpi-value">5</strong><div class="kpi-note">de 10 equipos candidatos</div></article>
+        <article class="kpi"><span class="kpi-label">Voluntarios seleccionados</span><strong class="kpi-value">18</strong><div class="kpi-note">de 30 disponibles</div></article>
+        <article class="kpi"><span class="kpi-label">Inversión estimada</span><strong class="kpi-value" style="font-size:clamp(23px,2.5vw,30px)">$9.900.000</strong><div class="kpi-note">de un presupuesto de $10.000.000</div></article>
+      </div>
+      <div class="callout">
+        <div class="callout-mark" aria-hidden="true">✓</div>
+        <div><strong>Recomendación: ejecutar el plan base y conservar el saldo de $100.000 como margen.</strong><p>Alcanza 309 puntos, cumple los mínimos de cobertura en las 12 combinaciones ciudad–tipo y tiene optimalidad probada por GAMS.</p></div>
+      </div>
+    </section>
+
+    <section class="section shell" aria-labelledby="distribution-title">
+      <div class="section-head">
+        <div>
+          <h2 id="distribution-title">¿Dónde estarán los equipos?</h2>
+          <p>La asignación cubre las tres ciudades y completa el inventario disponible de Manizales.</p>
+        </div>
+      </div>
+      <div class="two-col">
+        <article class="panel">
+          <h3>Cobertura por ciudad</h3>
+          <p class="panel-intro">Edificaciones planeadas sobre el total disponible.</p>
+          <div class="city-list" id="cityBars" aria-live="polite"></div>
+        </article>
+        <article class="panel">
+          <h3>Presupuesto de la misión</h3>
+          <p class="panel-intro">El caso base usa el 99% del presupuesto aprobado para el modelo.</p>
+          <div class="budget-summary"><strong>$9.900.000</strong><span>costo del plan</span></div>
+          <div class="budget-track" role="img" aria-label="Se usa el 99 por ciento del presupuesto"><div class="budget-fill"></div></div>
+          <div class="budget-legend"><span>$0</span><span>Tope $10.000.000</span></div>
+          <div class="budget-left">$100.000 <span>quedan disponibles</span></div>
+        </article>
+      </div>
+      <div class="recommend-grid" style="margin-top:14px">
+        <article class="recommend">
+          <div class="recommend-kicker">Prioridad: cobertura equilibrada</div>
+          <h4>El caso base es la opción más segura para ejecutar</h4>
+          <p>Con las tarifas originales, el caso base tiene óptimo probado y cumple todos los mínimos definidos.</p>
+        </article>
+        <article class="recommend alt">
+          <div class="recommend-kicker">Prioridad: más presencia en Armenia</div>
+          <h4>Reserve presupuesto adicional antes de cambiar la distribución</h4>
+          <p>El escenario de 8 edificios en Armenia alcanza 36 en total con $12 millones, pero su optimalidad no quedó probada.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell" id="escenarios" aria-labelledby="scenario-title">
+      <div class="section-head">
+        <div>
+          <h2 id="scenario-title">Si cambian las prioridades</h2>
+          <p>Explore cómo se mueve el resultado al cambiar presupuesto, costos o presencia territorial. El selector compara cifras agregadas; el detalle operativo de abajo corresponde al plan base.</p>
+        </div>
+      </div>
+      <div class="scenario-wrap">
+        <div class="panel scenario-control">
+          <label for="scenarioSelect">Elija un escenario</label>
+          <select id="scenarioSelect" aria-controls="scenarioResult">
+            <option value="base">Plan base · $10 millones</option>
+            <option value="budget105">Aumentar presupuesto · $10,5 millones</option>
+            <option value="budget11">Aumentar presupuesto · $11 millones</option>
+            <option value="tariff95">Reducir tarifas hipotéticamente · 5%</option>
+            <option value="armenia8">Priorizar Armenia · mínimo 8 edificios</option>
+            <option value="armenia2">Priorizar Armenia · mínimo 2 equipos</option>
+          </select>
+          <small>Las alternativas son resultados de escenarios, no cambios ya aprobados.</small>
+        </div>
+        <div class="scenario-result" id="scenarioResult" aria-live="polite">
+          <div class="scenario-result-top">
+            <div><h3 id="scenarioName">Plan base · presupuesto original</h3><p id="scenarioDescription">Referencia para la decisión actual.</p></div>
+            <span class="status-pill" id="scenarioStatus">Óptimo probado</span>
+          </div>
+          <div class="scenario-kpis">
+            <div class="scenario-kpi"><span>Puntaje</span><strong id="scenarioScore">309</strong></div>
+            <div class="scenario-kpi"><span>Edificios</span><strong id="scenarioBuildings">34</strong></div>
+            <div class="scenario-kpi"><span>Costo</span><strong id="scenarioCost">$9.900.000</strong></div>
+            <div class="scenario-kpi"><span>Personas · equipos</span><strong id="scenarioPeople">18 · 5</strong></div>
+          </div>
+          <div class="scenario-foot" id="scenarioFoot"><strong>Lectura:</strong> cumple las coberturas mínimas con $100.000 sin asignar.</div>
+          <div class="mini-city" id="scenarioCities" aria-label="Distribución por ciudad"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="equipos" aria-labelledby="teams-title">
+      <div class="section-head">
+        <div>
+          <h2 id="teams-title">Equipos y personas</h2>
+          <p>Detalle operativo del plan base. Abra cada equipo para consultar integrantes y edificaciones previstas.</p>
+        </div>
+      </div>
+      <div class="team-grid" id="teamGrid"></div>
+    </section>
+
+    <section class="section shell" id="edificios" aria-labelledby="buildings-title">
+      <div class="section-head">
+        <div>
+          <h2 id="buildings-title">Edificaciones del plan</h2>
+          <p>Listado del plan base. Busque por nombre o filtre por ciudad; la descarga genera un CSV que puede abrirse en Excel.</p>
+        </div>
+      </div>
+      <div class="table-toolbar">
+        <div class="filters">
+          <input type="search" id="buildingSearch" placeholder="Buscar una edificación…" aria-label="Buscar una edificación">
+          <select id="cityFilter" aria-label="Filtrar por ciudad">
+            <option value="">Todas las ciudades</option><option>Pereira</option><option>Manizales</option><option>Armenia</option>
+          </select>
+        </div>
+        <button class="button secondary" id="downloadCsv" type="button">Descargar listado CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Edificación</th><th>Ciudad</th><th>Tipo</th><th>Urgencia</th><th>Equipo</th><th>Puntos</th></tr></thead>
+          <tbody id="buildingRows"></tbody>
+        </table>
+        <div class="empty-state" id="emptyState">No encontramos edificaciones con esos filtros.</div>
+      </div>
+      <p id="buildingCount" class="panel-intro" aria-live="polite" style="margin:10px 2px 0"></p>
+    </section>
+
+    <section class="section shell" id="metodo" aria-labelledby="method-title">
+      <div class="section-head">
+        <div><h2 id="method-title">Lo esencial detrás del resultado</h2><p>Información breve para entender el alcance y usar la propuesta con criterio.</p></div>
+      </div>
+      <details class="info">
+        <summary>¿Qué optimiza el modelo?</summary>
+        <div class="info-body">
+          <p>Maximiza el puntaje asignado a las inspecciones según ciudad, tipo de edificación y urgencia, sujeto al presupuesto, capacidades de los voluntarios, tamaño y horas de trabajo de cada equipo, y mínimos de cobertura.</p>
+          <p>Por eso, “más edificios” y “mayor puntaje” no siempre coinciden. Con $11 millones, por ejemplo, el modelo obtiene 339 puntos con 33 edificios, uno menos que en el caso base.</p>
+        </div>
+      </details>
+      <details class="info">
+        <summary>¿Cómo se interpretan los escenarios?</summary>
+        <div class="info-body">
+          <ul>
+            <li>Los escenarios de $10,5 millones, $11 millones y reducción tarifaria del 5% tienen óptimo probado en GAMS.</li>
+            <li>Los escenarios que priorizan Armenia son factibles, pero el solver no probó que sean óptimos. El de 8 edificios en Armenia usa $12 millones; el de 2 equipos usa $11.950.000.</li>
+            <li>La reducción del 5% es una hipótesis para analizar sensibilidad, no una tarifa confirmada.</li>
+          </ul>
+        </div>
+      </details>
+      <details class="info">
+        <summary>¿Qué datos no están incluidos?</summary>
+        <div class="info-body">
+          <p>Los archivos fuente no cuantifican tiempos de viaje, distancias entre edificios, disponibilidad individual por fecha ni incertidumbre operativa. La propuesta organiza equipos y edificios con los parámetros disponibles; esos elementos deben confirmarse antes de programar las jornadas.</p>
+        </div>
+      </details>
+      <details class="info">
+        <summary>Nota de conciliación de cifras del Excel</summary>
+        <div class="info-body">
+          <div class="note-box"><strong>Se encontró una inconsistencia en la hoja “Resumen”.</strong> Allí se muestra “40” como edificaciones inspeccionadas y “100%” como cobertura general. Sin embargo, la hoja “Inspecciones” asigna 34 edificaciones (“Sí”) y 6 (“No”); las hojas “Escenarios” y “Cobertura” también suman 34 en el caso base. Esta página usa 34 de 40 (85%), conciliado con las asignaciones individuales y la distribución por ciudad.</div>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <div class="footer-inner">
+      <p><strong>Fuente y método:</strong> datos del proyecto y guía de misión suministrados; modelo entero resuelto con GAMS 25.0.3 y CPLEX. Esta página resume la solución y distingue las hipótesis de los datos originales.</p>
+      <a class="to-top" href="#inicio">Volver arriba ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    const scenarios = {
+      base: { name: "Plan base · presupuesto original", description: "Referencia para la decisión actual.", status: "Óptimo probado", score: 309, buildings: 34, cost: 9900000, people: 18, teams: 5, city: { Pereira: 14, Manizales: 13, Armenia: 7 }, budget: 10000000, foot: "cumple las coberturas mínimas con $100.000 sin asignar." },
+      budget105: { name: "Presupuesto de $10,5 millones", description: "Aumenta el puntaje con el mismo número de edificios.", status: "Óptimo probado", score: 329, buildings: 34, cost: 10450000, people: 19, teams: 5, city: { Pereira: 14, Manizales: 13, Armenia: 7 }, budget: 10500000, foot: "suma 20 puntos frente al plan base y requiere un voluntario adicional." },
+      budget11: { name: "Presupuesto de $11 millones", description: "Obtiene el mayor puntaje entre los escenarios presupuestales probados.", status: "Óptimo probado", score: 339, buildings: 33, cost: 11000000, people: 20, teams: 5, city: { Pereira: 13, Manizales: 13, Armenia: 7 }, budget: 11000000, foot: "gana 30 puntos frente al base, aunque planea una edificación menos." },
+      tariff95: { name: "Reducción hipotética de tarifas del 5%", description: "Prueba el efecto de una rebaja uniforme sobre las tarifas de voluntariado.", status: "Óptimo probado · hipótesis", score: 329, buildings: 34, cost: 9927500, people: 19, teams: 5, city: { Pereira: 14, Manizales: 13, Armenia: 7 }, budget: 10000000, foot: "eleva el puntaje en 20 y mantiene el costo bajo el presupuesto base; la rebaja no está confirmada." },
+      armenia8: { name: "Armenia con mínimo de 8 edificios", description: "Prioriza una mayor presencia en Armenia con más recursos.", status: "Factible · óptimo no probado", score: 322, buildings: 36, cost: 12000000, people: 21, teams: 6, city: { Pereira: 14, Manizales: 13, Armenia: 9 }, budget: 12000000, foot: "incluye 9 edificios en Armenia (mínimo requerido: 8); requiere $2 millones más que el caso base." },
+      armenia2: { name: "Armenia con mínimo de 2 equipos", description: "Asigna al menos dos equipos a Armenia y conserva cobertura en las tres ciudades.", status: "Factible · óptimo no probado", score: 322, buildings: 36, cost: 11950000, people: 21, teams: 6, city: { Pereira: 14, Manizales: 13, Armenia: 9 }, budget: 12000000, foot: "usa dos equipos en Armenia; requiere $1.950.000 más que el caso base." }
+    };
+
+    const baseCity = [
+      { name: "Pereira", total: 18, base: 14 },
+      { name: "Manizales", total: 13, base: 13 },
+      { name: "Armenia", total: 9, base: 7 }
+    ];
+
+    const teams = [
+      { id: "T04", name: "Equipo 4", city: "Pereira", people: 4, buildings: 6, hours: 24, points: 63, cost: 2250000, volunteers: ["ANDREINA ESPINEL", "VICTOR RODRIGUEZ", "SANTIAGO ANDRES ROJAS", "FELIPE ESTEBAN SALAZAR"], sites: ["Casa Los Cedros", "Edificio Los Pinos", "Colegio Los Cedros", "Colegio El Mirador", "Colegio Los Robles", "Centro Comunitario Las Acacias"] },
+      { id: "T06", name: "Equipo 6", city: "Pereira", people: 3, buildings: 8, hours: 21, points: 50, cost: 1550000, volunteers: ["ADRIANA PERTEGAS", "FERNANDO ANTOLINEZ", "YAJAIRA VELOZA"], sites: ["Casa Las Acacias", "Casa La Esperanza", "Casa Los Robles", "Casa Los Arrayanes", "Casa Los Olivos", "Edificio El Mirador", "Edificio La Primavera", "Centro Comunitario Los Cedros"] },
+      { id: "T07", name: "Equipo 7", city: "Manizales", people: 3, buildings: 7, hours: 21, points: 56, cost: 1600000, volunteers: ["OSCAR PEÑARANDA", "SILVIA PLAZAS", "LAURA VALENTINA CASTRO"], sites: ["Casa Las Camelias", "Casa El Encanto", "Casa El Paraiso", "Edificio Los Arrayanes", "Edificio El Jardin", "Edificio El Refugio", "Centro Comunitario Los Robles"] },
+      { id: "T09", name: "Equipo 9", city: "Armenia", people: 4, buildings: 7, hours: 24, points: 74, cost: 2250000, volunteers: ["OLGA SUAREZ", "RUTH LEAL", "SEBASTIAN DAVID ORTIZ", "NATALIA FERNANDA REYES"], sites: ["Casa La Florida", "Casa La Alameda", "Edificio Los Olivos", "Colegio Los Arrayanes", "Colegio La Aurora", "Centro Comunitario La Primavera", "Centro Comunitario El Porvenir"] },
+      { id: "T10", name: "Equipo 10", city: "Manizales", people: 4, buildings: 6, hours: 24, points: 66, cost: 2250000, volunteers: ["ANDRES LARA", "RONALD BAEZ", "CAMILA ANDREA MORALES", "MIGUEL ANGEL CARDENAS"], sites: ["Casa Los Nogales", "Edificio La Aurora", "Colegio La Primavera", "Colegio El Porvenir", "Colegio La Colina", "Centro Comunitario Los Pinos"] }
+    ];
+
+    const buildings = [
+      ["B01","Casa Los Cedros","Pereira","Vivienda de baja altura","Alta","T04",12],
+      ["B02","Casa Las Acacias","Pereira","Vivienda de baja altura","Media","T06",8],
+      ["B03","Casa La Esperanza","Pereira","Vivienda de baja altura","Baja","T06",3],
+      ["B04","Casa Los Robles","Pereira","Vivienda de baja altura","Baja","T06",3],
+      ["B05","Casa Los Arrayanes","Pereira","Vivienda de baja altura","Media","T06",8],
+      ["B06","Casa Los Olivos","Pereira","Vivienda de baja altura","Baja","T06",3],
+      ["B07","Edificio El Mirador","Pereira","Edificio residencial","Media","T06",11],
+      ["B08","Edificio Los Pinos","Pereira","Edificio residencial","Alta","T04",16],
+      ["B10","Edificio La Primavera","Pereira","Edificio residencial","Media","T06",11],
+      ["B12","Colegio Los Cedros","Pereira","Institucion educativa","Media","T04",10],
+      ["B13","Colegio El Mirador","Pereira","Institucion educativa","Baja","T04",5],
+      ["B15","Colegio Los Robles","Pereira","Institucion educativa","Media","T04",10],
+      ["B16","Centro Comunitario Los Cedros","Pereira","Edificacion comunitaria","Baja","T06",3],
+      ["B17","Centro Comunitario Las Acacias","Pereira","Edificacion comunitaria","Alta","T04",10],
+      ["B19","Casa Los Nogales","Manizales","Vivienda de baja altura","Media","T10",6],
+      ["B20","Casa Las Camelias","Manizales","Vivienda de baja altura","Baja","T07",3],
+      ["B21","Casa El Encanto","Manizales","Vivienda de baja altura","Alta","T07",10],
+      ["B22","Casa El Paraiso","Manizales","Vivienda de baja altura","Alta","T07",10],
+      ["B23","Edificio Los Arrayanes","Manizales","Edificio residencial","Media","T07",10],
+      ["B24","Edificio El Jardin","Manizales","Edificio residencial","Baja","T07",5],
+      ["B25","Edificio La Aurora","Manizales","Edificio residencial","Alta","T10",15],
+      ["B26","Edificio El Refugio","Manizales","Edificio residencial","Media","T07",10],
+      ["B27","Colegio La Primavera","Manizales","Institucion educativa","Alta","T10",16],
+      ["B28","Colegio El Porvenir","Manizales","Institucion educativa","Media","T10",11],
+      ["B29","Colegio La Colina","Manizales","Institucion educativa","Baja","T10",5],
+      ["B30","Centro Comunitario Los Pinos","Manizales","Edificacion comunitaria","Alta","T10",13],
+      ["B31","Centro Comunitario Los Robles","Manizales","Edificacion comunitaria","Media","T07",8],
+      ["B32","Casa La Florida","Armenia","Vivienda de baja altura","Baja","T09",2],
+      ["B33","Casa La Alameda","Armenia","Vivienda de baja altura","Alta","T09",8],
+      ["B35","Edificio Los Olivos","Armenia","Edificio residencial","Alta","T09",12],
+      ["B36","Colegio Los Arrayanes","Armenia","Institucion educativa","Alta","T09",18],
+      ["B37","Colegio La Aurora","Armenia","Institucion educativa","Alta","T09",18],
+      ["B38","Centro Comunitario La Primavera","Armenia","Edificacion comunitaria","Baja","T09",4],
+      ["B39","Centro Comunitario El Porvenir","Armenia","Edificacion comunitaria","Alta","T09",12]
+    ].map(([id,name,city,type,urgency,team,score]) => ({id,name,city,type,urgency,team,score}));
+
+    const cop = value => "$" + new Intl.NumberFormat("es-CO", { maximumFractionDigits: 0 }).format(value);
+    const cityBars = document.getElementById("cityBars");
+    const cityDetails = city => baseCity.find(item => item.name === city);
+
+    function renderCityBars(caseData) {
+      cityBars.innerHTML = "";
+      baseCity.forEach(city => {
+        const assigned = caseData.city[city.name];
+        const pct = Math.round(assigned / city.total * 100);
+        const row = document.createElement("div");
+        row.className = "city-row";
+        row.innerHTML = `<div class="city-top"><span class="city-name">${city.name}</span><span class="city-count">${assigned} de ${city.total} · ${pct}%</span></div><div class="bar-track" role="img" aria-label="${city.name}: ${assigned} de ${city.total} edificios"><div class="bar-fill" style="width:${pct}%"></div></div><div class="city-note">${assigned === city.total ? "Inventario completo" : `${city.total - assigned} edificaciones quedan fuera del plan`}</div>`;
+        cityBars.appendChild(row);
+      });
+    }
+
+    function renderScenario(key) {
+      const d = scenarios[key];
+      document.getElementById("scenarioName").textContent = d.name;
+      document.getElementById("scenarioDescription").textContent = d.description;
+      document.getElementById("scenarioStatus").textContent = d.status;
+      document.getElementById("scenarioScore").textContent = d.score;
+      document.getElementById("scenarioBuildings").textContent = d.buildings;
+      document.getElementById("scenarioCost").textContent = cop(d.cost);
+      document.getElementById("scenarioPeople").textContent = `${d.people} · ${d.teams}`;
+      document.getElementById("scenarioFoot").innerHTML = `<strong>Lectura:</strong> ${d.foot}`;
+      document.getElementById("scenarioCities").innerHTML = Object.entries(d.city).map(([city,count]) => `<span>${city}: ${count}</span>`).join("");
+    }
+
+    function renderTeams() {
+      const grid = document.getElementById("teamGrid");
+      grid.innerHTML = teams.map(team => `
+        <details class="team-card">
+          <summary>
+            <div class="team-title">${team.name} <span class="team-city">· ${team.city}</span></div>
+            <div class="team-meta"><span>${team.people} voluntarios</span><span>${team.buildings} edificaciones</span><span>${team.hours} horas</span><span>${cop(team.cost)}</span><span>${team.points} puntos</span></div>
+          </summary>
+          <div class="team-detail">
+            <h4>Integrantes</h4><p class="names">${team.volunteers.join(" · ")}</p>
+            <h4>Edificaciones asignadas</h4><ul>${team.sites.map(site => `<li>${site}</li>`).join("")}</ul>
+          </div>
+        </details>`).join("");
+    }
+
+    function renderBuildings() {
+      const query = document.getElementById("buildingSearch").value.trim().toLocaleLowerCase("es-CO");
+      const city = document.getElementById("cityFilter").value;
+      const filtered = buildings.filter(b => (!city || b.city === city) && (!query || b.name.toLocaleLowerCase("es-CO").includes(query) || b.id.toLocaleLowerCase("es-CO").includes(query)));
+      document.getElementById("buildingRows").innerHTML = filtered.map(b => {
+        const team = teams.find(t => t.id === b.team);
+        return `<tr><td><strong>${b.name}</strong><br><span style="color:var(--muted);font-size:12px">${b.id}</span></td><td>${b.city}</td><td>${b.type}</td><td><span class="tag">${b.urgency}</span></td><td>${team.name}</td><td>${b.score}</td></tr>`;
+      }).join("");
+      document.getElementById("emptyState").style.display = filtered.length ? "none" : "block";
+      document.getElementById("buildingCount").textContent = `Mostrando ${filtered.length} de ${buildings.length} edificaciones planeadas.`;
+    }
+
+    function downloadCsv() {
+      const header = ["ID", "Edificacion", "Ciudad", "Tipo", "Urgencia", "Equipo", "Puntaje"];
+      const rows = buildings.map(b => [b.id,b.name,b.city,b.type,b.urgency,teams.find(t => t.id === b.team).name,b.score]);
+      const csv = [header, ...rows].map(row => row.map(value => `"${String(value).replaceAll('"','""')}"`).join(",")).join("\r\n");
+      const blob = new Blob(["\ufeff" + csv], {type:"text/csv;charset=utf-8"});
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "edificaciones_plan_base.csv";
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    }
+
+    document.getElementById("scenarioSelect").addEventListener("change", event => renderScenario(event.target.value));
+    document.getElementById("buildingSearch").addEventListener("input", renderBuildings);
+    document.getElementById("cityFilter").addEventListener("change", renderBuildings);
+    document.getElementById("downloadCsv").addEventListener("click", downloadCsv);
+    renderCityBars(scenarios.base);
+    renderScenario("base");
+    renderTeams();
+    renderBuildings();
+  </script>
+</body>
+</html>
+
