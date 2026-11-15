@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#123b35">
-  <meta name="description" content="Consulta el equipo y las edificaciones del plan base de voluntariado del Eje Cafetero.">
+  <meta name="description" content="Consulta la asignación de voluntariado resuelta con GAMS para la misión del Eje Cafetero.">
   <title>Consulta tu equipo | Misión Eje Cafetero</title>
   <style>
     :root {
@@ -145,7 +145,7 @@
 
     <section id="coordView" hidden aria-labelledby="coordTitle">
       <div class="coord-head">
-        <div><h2 id="coordTitle">Vista de coordinación</h2><p>Resumen operativo del caso base: cinco equipos, 34 edificaciones planeadas y $100.000 de presupuesto sin asignar.</p></div>
+        <div><h2 id="coordTitle">Vista de coordinación</h2><p>Resumen operativo de la solución óptima de GAMS: 309 puntos, cinco equipos, 34 inspecciones y $100.000 de presupuesto sin asignar.</p></div>
       </div>
       <div class="metrics">
         <div class="metric"><span>Edificaciones planeadas</span><strong>34 / 40</strong></div>
@@ -163,54 +163,17 @@
 
   <footer class="shell footer">
     <div class="footer-inner">
-      <p>Fuente: asignaciones, equipos, edificaciones y voluntarios del libro de resultados del proyecto. La solución base fue resuelta con GAMS y CPLEX. La información se muestra localmente en esta página.</p>
+      <p>Fuente: asignaciones, equipos, edificaciones y voluntarios del libro de resultados del proyecto. Solución base óptima resuelta con GAMS y CPLEX: 309 puntos, 34 edificaciones y 18 voluntarios asignados. La información se muestra localmente en esta página.</p>
       <a class="toplink" href="#inicio">Volver arriba ↑</a>
     </div>
   </footer>
 
   <script>
-    const volunteers = [
-      ["V01","ADRIANA PERTEGAS","Civil general","Inicial","T06"],
-      ["V02","YINEY CONTRERAS","Civil general","Intermedia",null],
-      ["V03","ANDREINA ESPINEL","Civil general","Inicial","T04"],
-      ["V04","ANDRES LARA","Civil general","Intermedia","T10"],
-      ["V05","FERNANDO ANTOLINEZ","Civil general","Inicial","T06"],
-      ["V06","NINFA GARAY","Civil general","Intermedia",null],
-      ["V07","OLGA SUAREZ","Civil general","Inicial","T09"],
-      ["V08","OSCAR PEÑARANDA","Civil general","Intermedia","T07"],
-      ["V09","RONALD BAEZ","Civil general","Inicial","T10"],
-      ["V10","RUTH LEAL","Civil general","Intermedia","T09"],
-      ["V11","SILVIA PLAZAS","Civil general","Inicial","T07"],
-      ["V12","VICTOR RODRIGUEZ","Civil general","Intermedia","T04"],
-      ["V13","YAJAIRA VELOZA","Estructuras","Avanzada","T06"],
-      ["V14","YANITH CUELLAR","Estructuras","Avanzada",null],
-      ["V15","CAMILA ANDREA MORALES","Estructuras","Avanzada","T10"],
-      ["V16","JUAN PABLO HERRERA","Estructuras","Avanzada",null],
-      ["V17","LAURA VALENTINA CASTRO","Estructuras","Avanzada","T07"],
-      ["V18","DANIEL FELIPE VARGAS","Estructuras","Avanzada",null],
-      ["V19","MARIANA LOPEZ TORRES","Estructuras","Avanzada",null],
-      ["V20","SANTIAGO ANDRES ROJAS","Estructuras","Inicial","T04"],
-      ["V21","PAULA ANDREA MENDOZA","Estructuras","Intermedia",null],
-      ["V22","NICOLAS EDUARDO PINEDA","Estructuras","Inicial",null],
-      ["V23","VALERIA ISABEL RAMIREZ","Estructuras","Intermedia",null],
-      ["V24","SEBASTIAN DAVID ORTIZ","Estructuras","Inicial","T09"],
-      ["V25","CATALINA MARIA SUAREZ","Geotecnia","Intermedia",null],
-      ["V26","MIGUEL ANGEL CARDENAS","Geotecnia","Inicial","T10"],
-      ["V27","DIANA CAROLINA GUTIERREZ","Geotecnia","Intermedia",null],
-      ["V28","ALEJANDRO JOSE MEDINA","Geotecnia","Avanzada",null],
-      ["V29","NATALIA FERNANDA REYES","Geotecnia","Avanzada","T09"],
-      ["V30","FELIPE ESTEBAN SALAZAR","Geotecnia","Avanzada","T04"]
-    ].map(([id,name,profile,experience,team]) => ({id,name,profile,experience,team}));
+    const volunteers = [["V01","ADRIANA PERTEGAS","Civil general","Inicial","T04"],["V02","YINEY CONTRERAS","Civil general","Intermedia","T08"],["V03","ANDREINA ESPINEL","Civil general","Inicial","T08"],["V04","ANDRES LARA","Civil general","Intermedia",null],["V05","FERNANDO ANTOLINEZ","Civil general","Inicial","T05"],["V06","NINFA GARAY","Civil general","Intermedia",null],["V07","OLGA SUAREZ","Civil general","Inicial","T10"],["V08","OSCAR PEÑARANDA","Civil general","Intermedia","T04"],["V09","RONALD BAEZ","Civil general","Inicial","T09"],["V10","RUTH LEAL","Civil general","Intermedia","T05"],["V11","SILVIA PLAZAS","Civil general","Inicial","T10"],["V12","VICTOR RODRIGUEZ","Civil general","Intermedia","T09"],["V13","YAJAIRA VELOZA","Estructuras","Avanzada","T08"],["V14","YANITH CUELLAR","Estructuras","Avanzada","T09"],["V15","CAMILA ANDREA MORALES","Estructuras","Avanzada",null],["V16","JUAN PABLO HERRERA","Estructuras","Avanzada",null],["V17","LAURA VALENTINA CASTRO","Estructuras","Avanzada","T10"],["V18","DANIEL FELIPE VARGAS","Estructuras","Avanzada",null],["V19","MARIANA LOPEZ TORRES","Estructuras","Avanzada",null],["V20","SANTIAGO ANDRES ROJAS","Estructuras","Inicial","T05"],["V21","PAULA ANDREA MENDOZA","Estructuras","Intermedia",null],["V22","NICOLAS EDUARDO PINEDA","Estructuras","Inicial","T04"],["V23","VALERIA ISABEL RAMIREZ","Estructuras","Intermedia",null],["V24","SEBASTIAN DAVID ORTIZ","Estructuras","Inicial",null],["V25","CATALINA MARIA SUAREZ","Geotecnia","Intermedia",null],["V26","MIGUEL ANGEL CARDENAS","Geotecnia","Inicial","T08"],["V27","DIANA CAROLINA GUTIERREZ","Geotecnia","Intermedia",null],["V28","ALEJANDRO JOSE MEDINA","Geotecnia","Avanzada","T05"],["V29","NATALIA FERNANDA REYES","Geotecnia","Avanzada",null],["V30","FELIPE ESTEBAN SALAZAR","Geotecnia","Avanzada","T04"]].map(([id,name,profile,experience,team]) => ({id,name,profile,experience,team}));
 
-    const teams = [
-      {id:"T04",name:"Equipo 4",city:"Pereira",hours:24,score:63,cost:2250000,sites:["Casa Los Cedros","Edificio Los Pinos","Colegio Los Cedros","Colegio El Mirador","Colegio Los Robles","Centro Comunitario Las Acacias"]},
-      {id:"T06",name:"Equipo 6",city:"Pereira",hours:21,score:50,cost:1550000,sites:["Casa Las Acacias","Casa La Esperanza","Casa Los Robles","Casa Los Arrayanes","Casa Los Olivos","Edificio El Mirador","Edificio La Primavera","Centro Comunitario Los Cedros"]},
-      {id:"T07",name:"Equipo 7",city:"Manizales",hours:21,score:56,cost:1600000,sites:["Casa Las Camelias","Casa El Encanto","Casa El Paraiso","Edificio Los Arrayanes","Edificio El Jardin","Edificio El Refugio","Centro Comunitario Los Robles"]},
-      {id:"T09",name:"Equipo 9",city:"Armenia",hours:24,score:74,cost:2250000,sites:["Casa La Florida","Casa La Alameda","Edificio Los Olivos","Colegio Los Arrayanes","Colegio La Aurora","Centro Comunitario La Primavera","Centro Comunitario El Porvenir"]},
-      {id:"T10",name:"Equipo 10",city:"Manizales",hours:24,score:66,cost:2250000,sites:["Casa Los Nogales","Edificio La Aurora","Colegio La Primavera","Colegio El Porvenir","Colegio La Colina","Centro Comunitario Los Pinos"]}
-    ];
+    const teams = [{"id":"T04","name":"Equipo 4","city":"Pereira","hours":24,"score":63,"cost":2250000,"sites":["Casa Los Cedros","Edificio Los Pinos","Colegio Los Cedros","Colegio El Mirador","Colegio Los Robles","Centro Comunitario Las Acacias"]},{"id":"T05","name":"Equipo 5","city":"Armenia","hours":24,"score":74,"cost":2250000,"sites":["Casa La Florida","Casa La Alameda","Edificio Los Olivos","Colegio Los Arrayanes","Colegio La Aurora","Centro Comunitario La Primavera","Centro Comunitario El Porvenir"]},{"id":"T08","name":"Equipo 8","city":"Manizales","hours":24,"score":66,"cost":2250000,"sites":["Casa Los Nogales","Edificio La Aurora","Colegio La Primavera","Colegio El Porvenir","Colegio La Colina","Centro Comunitario Los Pinos"]},{"id":"T09","name":"Equipo 9","city":"Pereira","hours":21,"score":50,"cost":1600000,"sites":["Casa Las Acacias","Casa La Esperanza","Casa Los Robles","Casa Los Arrayanes","Casa Los Olivos","Edificio El Mirador","Edificio La Primavera","Centro Comunitario Los Cedros"]},{"id":"T10","name":"Equipo 10","city":"Manizales","hours":21,"score":56,"cost":1550000,"sites":["Casa Las Camelias","Casa El Encanto","Casa El Paraiso","Edificio Los Arrayanes","Edificio El Jardin","Edificio El Refugio","Centro Comunitario Los Robles"]}];
 
-    const cities = [{name:"Pereira",assigned:14,total:18},{name:"Manizales",assigned:13,total:13},{name:"Armenia",assigned:7,total:9}];
+    const cities = [{"name":"Pereira","assigned":14,"total":18},{"name":"Manizales","assigned":13,"total":13},{"name":"Armenia","assigned":7,"total":9}];
     const normalize = value => value.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleUpperCase("es-CO").replace(/[^A-Z0-9 ]/g," ").replace(/\s+/g," ").trim();
     const titleCase = value => value.toLocaleLowerCase("es-CO").replace(/(^|\s)\S/g, letter => letter.toLocaleUpperCase("es-CO"));
     const teamVolunteers = id => volunteers.filter(person => person.team === id);
