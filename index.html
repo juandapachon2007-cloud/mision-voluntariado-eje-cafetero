@@ -124,6 +124,7 @@
     .scenario-result h3 { margin: 0; font-size: 22px; }
     .scenario-result p { margin: 5px 0 0; color: #d9e7e1; font-size: 14px; }
     .status-pill { padding: 6px 9px; border-radius: 999px; color: var(--green); background: var(--sun); font-size: 11px; font-weight: 850; white-space: nowrap; }
+    .status-pill.is-infeasible { color: #8a2f28; background: #fbe2df; }
     .scenario-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 19px; }
     .scenario-kpi { padding: 13px; border: 1px solid rgba(255,255,255,.18); border-radius: 13px; background: rgba(255,255,255,.07); }
     .scenario-kpi span { display: block; color: #c9ddd4; font-size: 11px; }
@@ -306,9 +307,9 @@
           <p>Con las tarifas originales, el caso base tiene óptimo probado y cumple todos los mínimos definidos.</p>
         </article>
         <article class="recommend alt">
-          <div class="recommend-kicker">Prioridad: más presencia en Armenia</div>
-          <h4>Reserve presupuesto adicional antes de cambiar la distribución</h4>
-          <p>El escenario de 8 edificios en Armenia alcanza 36 en total con $12 millones, pero su optimalidad no quedó probada.</p>
+          <div class="recommend-kicker">Prioridad: mayor puntaje</div>
+          <h4>La prueba de $11 millones alcanza 339 puntos</h4>
+          <p>Con un presupuesto hipotético de $11 millones, el modelo alcanza 339 puntos; cambia la composición del plan y deja $50.000 sin asignar.</p>
         </article>
       </div>
     </section>
@@ -317,7 +318,7 @@
       <div class="section-head">
         <div>
           <h2 id="scenario-title">Si cambian las prioridades</h2>
-          <p>Explore cómo se mueve el resultado al cambiar presupuesto, costos o presencia territorial. El selector compara cifras agregadas; el detalle operativo de abajo corresponde al plan base.</p>
+          <p>Compare la solución base con dos presupuestos de prueba. El detalle operativo de abajo corresponde al plan base de $10 millones.</p>
         </div>
       </div>
       <div class="scenario-wrap">
@@ -325,11 +326,8 @@
           <label for="scenarioSelect">Elija un escenario</label>
           <select id="scenarioSelect" aria-controls="scenarioResult">
             <option value="base">Plan base · $10 millones</option>
-            <option value="budget105">Aumentar presupuesto · $10,5 millones</option>
-            <option value="budget11">Aumentar presupuesto · $11 millones</option>
-            <option value="tariff95">Reducir tarifas hipotéticamente · 5%</option>
-            <option value="armenia8">Priorizar Armenia · mínimo 8 edificios</option>
-            <option value="armenia2">Priorizar Armenia · mínimo 2 equipos</option>
+            <option value="budget9">Presupuesto de prueba · $9 millones</option>
+            <option value="budget11">Presupuesto de prueba · $11 millones</option>
           </select>
           <small>Las alternativas son resultados de escenarios, no cambios ya aprobados.</small>
         </div>
@@ -401,9 +399,9 @@
         <summary>¿Cómo se interpretan los escenarios?</summary>
         <div class="info-body">
           <ul>
-            <li>Los escenarios de $10,5 millones, $11 millones y reducción tarifaria del 5% tienen óptimo probado en GAMS.</li>
-            <li>Los escenarios que priorizan Armenia son factibles, pero el solver no probó que sean óptimos. El de 8 edificios en Armenia usa $12 millones; el de 2 equipos usa $11.950.000.</li>
-            <li>La reducción del 5% es una hipótesis para analizar sensibilidad, no una tarifa confirmada.</li>
+            <li>El caso base de $10 millones y la prueba de $11 millones tienen óptimo probado en GAMS. La prueba de $9 millones es infactible.</li>
+            <li>El escenario de $11 millones obtiene 339 puntos, 33 edificios, 19 voluntarios y un costo de $10.950.000. El de $9 millones no genera asignación factible.</li>
+            <li>Los presupuestos alternos son pruebas de sensibilidad, no cambios aprobados al presupuesto oficial.</li>
           </ul>
         </div>
       </details>
@@ -416,7 +414,7 @@
       <details class="info">
         <summary>Nota de conciliación de cifras del Excel</summary>
         <div class="info-body">
-          <div class="note-box"><strong>Se encontró una inconsistencia en la hoja “Resumen”.</strong> Allí se muestra “40” como edificaciones inspeccionadas y “100%” como cobertura general. Sin embargo, la hoja “Inspecciones” asigna 34 edificaciones (“Sí”) y 6 (“No”); las hojas “Escenarios” y “Cobertura” también suman 34 en el caso base. Esta página usa 34 de 40 (85%), conciliado con las asignaciones individuales y la distribución por ciudad.</div>
+          <div class="note-box"><strong>El inventario disponible tiene 40 edificaciones.</strong> La solución base programa 34 inspecciones (85% del inventario); las otras 6 no se seleccionan en este óptimo porque el modelo maximiza puntaje sujeto a las restricciones.</div>
         </div>
       </details>
     </section>
@@ -424,71 +422,19 @@
 
   <footer class="shell">
     <div class="footer-inner">
-      <p><strong>Fuente y método:</strong> datos del proyecto y guía de misión suministrados; modelo entero resuelto con GAMS 25.0.3 y CPLEX. Esta página resume la solución y distingue las hipótesis de los datos originales.</p>
+      <p><strong>Fuente y método:</strong> datos del proyecto y guía de misión suministrados; modelo entero resuelto con GAMS 25.0.3 y CPLEX. Esta página se actualizó con la solución base de GAMS y las dos pruebas de presupuesto de $9 y $11 millones.</p>
       <a class="to-top" href="#inicio">Volver arriba ↑</a>
     </div>
   </footer>
 
   <script>
-    const scenarios = {
-      base: { name: "Plan base · presupuesto original", description: "Referencia para la decisión actual.", status: "Óptimo probado", score: 309, buildings: 34, cost: 9900000, people: 18, teams: 5, city: { Pereira: 14, Manizales: 13, Armenia: 7 }, budget: 10000000, foot: "cumple las coberturas mínimas con $100.000 sin asignar." },
-      budget105: { name: "Presupuesto de $10,5 millones", description: "Aumenta el puntaje con el mismo número de edificios.", status: "Óptimo probado", score: 329, buildings: 34, cost: 10450000, people: 19, teams: 5, city: { Pereira: 14, Manizales: 13, Armenia: 7 }, budget: 10500000, foot: "suma 20 puntos frente al plan base y requiere un voluntario adicional." },
-      budget11: { name: "Presupuesto de $11 millones", description: "Obtiene el mayor puntaje entre los escenarios presupuestales probados.", status: "Óptimo probado", score: 339, buildings: 33, cost: 11000000, people: 20, teams: 5, city: { Pereira: 13, Manizales: 13, Armenia: 7 }, budget: 11000000, foot: "gana 30 puntos frente al base, aunque planea una edificación menos." },
-      tariff95: { name: "Reducción hipotética de tarifas del 5%", description: "Prueba el efecto de una rebaja uniforme sobre las tarifas de voluntariado.", status: "Óptimo probado · hipótesis", score: 329, buildings: 34, cost: 9927500, people: 19, teams: 5, city: { Pereira: 14, Manizales: 13, Armenia: 7 }, budget: 10000000, foot: "eleva el puntaje en 20 y mantiene el costo bajo el presupuesto base; la rebaja no está confirmada." },
-      armenia8: { name: "Armenia con mínimo de 8 edificios", description: "Prioriza una mayor presencia en Armenia con más recursos.", status: "Factible · óptimo no probado", score: 322, buildings: 36, cost: 12000000, people: 21, teams: 6, city: { Pereira: 14, Manizales: 13, Armenia: 9 }, budget: 12000000, foot: "incluye 9 edificios en Armenia (mínimo requerido: 8); requiere $2 millones más que el caso base." },
-      armenia2: { name: "Armenia con mínimo de 2 equipos", description: "Asigna al menos dos equipos a Armenia y conserva cobertura en las tres ciudades.", status: "Factible · óptimo no probado", score: 322, buildings: 36, cost: 11950000, people: 21, teams: 6, city: { Pereira: 14, Manizales: 13, Armenia: 9 }, budget: 12000000, foot: "usa dos equipos en Armenia; requiere $1.950.000 más que el caso base." }
-    };
+    const scenarios = {"base":{"name":"Plan base · presupuesto original","description":"Referencia resuelta con el presupuesto del modelo.","status":"Óptimo probado","score":309,"buildings":34,"cost":9900000,"people":18,"teams":5,"city":{"Pereira":14,"Manizales":13,"Armenia":7},"budget":10000000,"foot":"cumple las coberturas mínimas con $100.000 sin asignar."},"budget9":{"name":"Presupuesto de $9 millones","description":"Prueba de sensibilidad con todos los demás parámetros iguales.","status":"Infactible","score":null,"buildings":null,"cost":null,"people":null,"teams":null,"city":{},"budget":9000000,"foot":"no existe una asignación que cumpla simultáneamente todas las restricciones con este presupuesto."},"budget11":{"name":"Presupuesto de $11 millones","description":"Prueba de sensibilidad con todos los demás parámetros iguales.","status":"Óptimo probado","score":339,"buildings":33,"cost":10950000,"people":19,"teams":5,"city":{"Pereira":13,"Manizales":13,"Armenia":7},"budget":11000000,"foot":"obtiene 30 puntos más que el plan base con una edificación menos; quedan $50.000 sin utilizar."}};
 
-    const baseCity = [
-      { name: "Pereira", total: 18, base: 14 },
-      { name: "Manizales", total: 13, base: 13 },
-      { name: "Armenia", total: 9, base: 7 }
-    ];
+    const baseCity = [{"name":"Pereira","total":18,"base":14},{"name":"Manizales","total":13,"base":13},{"name":"Armenia","total":9,"base":7}];
 
-    const teams = [
-      { id: "T04", name: "Equipo 4", city: "Pereira", people: 4, buildings: 6, hours: 24, points: 63, cost: 2250000, volunteers: ["ANDREINA ESPINEL", "VICTOR RODRIGUEZ", "SANTIAGO ANDRES ROJAS", "FELIPE ESTEBAN SALAZAR"], sites: ["Casa Los Cedros", "Edificio Los Pinos", "Colegio Los Cedros", "Colegio El Mirador", "Colegio Los Robles", "Centro Comunitario Las Acacias"] },
-      { id: "T06", name: "Equipo 6", city: "Pereira", people: 3, buildings: 8, hours: 21, points: 50, cost: 1550000, volunteers: ["ADRIANA PERTEGAS", "FERNANDO ANTOLINEZ", "YAJAIRA VELOZA"], sites: ["Casa Las Acacias", "Casa La Esperanza", "Casa Los Robles", "Casa Los Arrayanes", "Casa Los Olivos", "Edificio El Mirador", "Edificio La Primavera", "Centro Comunitario Los Cedros"] },
-      { id: "T07", name: "Equipo 7", city: "Manizales", people: 3, buildings: 7, hours: 21, points: 56, cost: 1600000, volunteers: ["OSCAR PEÑARANDA", "SILVIA PLAZAS", "LAURA VALENTINA CASTRO"], sites: ["Casa Las Camelias", "Casa El Encanto", "Casa El Paraiso", "Edificio Los Arrayanes", "Edificio El Jardin", "Edificio El Refugio", "Centro Comunitario Los Robles"] },
-      { id: "T09", name: "Equipo 9", city: "Armenia", people: 4, buildings: 7, hours: 24, points: 74, cost: 2250000, volunteers: ["OLGA SUAREZ", "RUTH LEAL", "SEBASTIAN DAVID ORTIZ", "NATALIA FERNANDA REYES"], sites: ["Casa La Florida", "Casa La Alameda", "Edificio Los Olivos", "Colegio Los Arrayanes", "Colegio La Aurora", "Centro Comunitario La Primavera", "Centro Comunitario El Porvenir"] },
-      { id: "T10", name: "Equipo 10", city: "Manizales", people: 4, buildings: 6, hours: 24, points: 66, cost: 2250000, volunteers: ["ANDRES LARA", "RONALD BAEZ", "CAMILA ANDREA MORALES", "MIGUEL ANGEL CARDENAS"], sites: ["Casa Los Nogales", "Edificio La Aurora", "Colegio La Primavera", "Colegio El Porvenir", "Colegio La Colina", "Centro Comunitario Los Pinos"] }
-    ];
+    const teams = [{"id":"T04","name":"Equipo 4","city":"Pereira","people":4,"buildings":6,"hours":24,"points":63,"cost":2250000,"volunteers":["ADRIANA PERTEGAS","OSCAR PEÑARANDA","NICOLAS EDUARDO PINEDA","FELIPE ESTEBAN SALAZAR"],"sites":["Casa Los Cedros","Edificio Los Pinos","Colegio Los Cedros","Colegio El Mirador","Colegio Los Robles","Centro Comunitario Las Acacias"]},{"id":"T05","name":"Equipo 5","city":"Armenia","people":4,"buildings":7,"hours":24,"points":74,"cost":2250000,"volunteers":["FERNANDO ANTOLINEZ","RUTH LEAL","SANTIAGO ANDRES ROJAS","ALEJANDRO JOSE MEDINA"],"sites":["Casa La Florida","Casa La Alameda","Edificio Los Olivos","Colegio Los Arrayanes","Colegio La Aurora","Centro Comunitario La Primavera","Centro Comunitario El Porvenir"]},{"id":"T08","name":"Equipo 8","city":"Manizales","people":4,"buildings":6,"hours":24,"points":66,"cost":2250000,"volunteers":["YINEY CONTRERAS","ANDREINA ESPINEL","YAJAIRA VELOZA","MIGUEL ANGEL CARDENAS"],"sites":["Casa Los Nogales","Edificio La Aurora","Colegio La Primavera","Colegio El Porvenir","Colegio La Colina","Centro Comunitario Los Pinos"]},{"id":"T09","name":"Equipo 9","city":"Pereira","people":3,"buildings":8,"hours":21,"points":50,"cost":1600000,"volunteers":["RONALD BAEZ","VICTOR RODRIGUEZ","YANITH CUELLAR"],"sites":["Casa Las Acacias","Casa La Esperanza","Casa Los Robles","Casa Los Arrayanes","Casa Los Olivos","Edificio El Mirador","Edificio La Primavera","Centro Comunitario Los Cedros"]},{"id":"T10","name":"Equipo 10","city":"Manizales","people":3,"buildings":7,"hours":21,"points":56,"cost":1550000,"volunteers":["OLGA SUAREZ","SILVIA PLAZAS","LAURA VALENTINA CASTRO"],"sites":["Casa Las Camelias","Casa El Encanto","Casa El Paraiso","Edificio Los Arrayanes","Edificio El Jardin","Edificio El Refugio","Centro Comunitario Los Robles"]}];
 
-    const buildings = [
-      ["B01","Casa Los Cedros","Pereira","Vivienda de baja altura","Alta","T04",12],
-      ["B02","Casa Las Acacias","Pereira","Vivienda de baja altura","Media","T06",8],
-      ["B03","Casa La Esperanza","Pereira","Vivienda de baja altura","Baja","T06",3],
-      ["B04","Casa Los Robles","Pereira","Vivienda de baja altura","Baja","T06",3],
-      ["B05","Casa Los Arrayanes","Pereira","Vivienda de baja altura","Media","T06",8],
-      ["B06","Casa Los Olivos","Pereira","Vivienda de baja altura","Baja","T06",3],
-      ["B07","Edificio El Mirador","Pereira","Edificio residencial","Media","T06",11],
-      ["B08","Edificio Los Pinos","Pereira","Edificio residencial","Alta","T04",16],
-      ["B10","Edificio La Primavera","Pereira","Edificio residencial","Media","T06",11],
-      ["B12","Colegio Los Cedros","Pereira","Institucion educativa","Media","T04",10],
-      ["B13","Colegio El Mirador","Pereira","Institucion educativa","Baja","T04",5],
-      ["B15","Colegio Los Robles","Pereira","Institucion educativa","Media","T04",10],
-      ["B16","Centro Comunitario Los Cedros","Pereira","Edificacion comunitaria","Baja","T06",3],
-      ["B17","Centro Comunitario Las Acacias","Pereira","Edificacion comunitaria","Alta","T04",10],
-      ["B19","Casa Los Nogales","Manizales","Vivienda de baja altura","Media","T10",6],
-      ["B20","Casa Las Camelias","Manizales","Vivienda de baja altura","Baja","T07",3],
-      ["B21","Casa El Encanto","Manizales","Vivienda de baja altura","Alta","T07",10],
-      ["B22","Casa El Paraiso","Manizales","Vivienda de baja altura","Alta","T07",10],
-      ["B23","Edificio Los Arrayanes","Manizales","Edificio residencial","Media","T07",10],
-      ["B24","Edificio El Jardin","Manizales","Edificio residencial","Baja","T07",5],
-      ["B25","Edificio La Aurora","Manizales","Edificio residencial","Alta","T10",15],
-      ["B26","Edificio El Refugio","Manizales","Edificio residencial","Media","T07",10],
-      ["B27","Colegio La Primavera","Manizales","Institucion educativa","Alta","T10",16],
-      ["B28","Colegio El Porvenir","Manizales","Institucion educativa","Media","T10",11],
-      ["B29","Colegio La Colina","Manizales","Institucion educativa","Baja","T10",5],
-      ["B30","Centro Comunitario Los Pinos","Manizales","Edificacion comunitaria","Alta","T10",13],
-      ["B31","Centro Comunitario Los Robles","Manizales","Edificacion comunitaria","Media","T07",8],
-      ["B32","Casa La Florida","Armenia","Vivienda de baja altura","Baja","T09",2],
-      ["B33","Casa La Alameda","Armenia","Vivienda de baja altura","Alta","T09",8],
-      ["B35","Edificio Los Olivos","Armenia","Edificio residencial","Alta","T09",12],
-      ["B36","Colegio Los Arrayanes","Armenia","Institucion educativa","Alta","T09",18],
-      ["B37","Colegio La Aurora","Armenia","Institucion educativa","Alta","T09",18],
-      ["B38","Centro Comunitario La Primavera","Armenia","Edificacion comunitaria","Baja","T09",4],
-      ["B39","Centro Comunitario El Porvenir","Armenia","Edificacion comunitaria","Alta","T09",12]
-    ].map(([id,name,city,type,urgency,team,score]) => ({id,name,city,type,urgency,team,score}));
+    const buildings = [["B01","Casa Los Cedros","Pereira","Vivienda de baja altura","Alta","T04",12],["B02","Casa Las Acacias","Pereira","Vivienda de baja altura","Media","T09",8],["B03","Casa La Esperanza","Pereira","Vivienda de baja altura","Baja","T09",3],["B04","Casa Los Robles","Pereira","Vivienda de baja altura","Baja","T09",3],["B05","Casa Los Arrayanes","Pereira","Vivienda de baja altura","Media","T09",8],["B06","Casa Los Olivos","Pereira","Vivienda de baja altura","Baja","T09",3],["B07","Edificio El Mirador","Pereira","Edificio residencial","Media","T09",11],["B08","Edificio Los Pinos","Pereira","Edificio residencial","Alta","T04",16],["B10","Edificio La Primavera","Pereira","Edificio residencial","Media","T09",11],["B12","Colegio Los Cedros","Pereira","Institucion educativa","Media","T04",10],["B13","Colegio El Mirador","Pereira","Institucion educativa","Baja","T04",5],["B15","Colegio Los Robles","Pereira","Institucion educativa","Media","T04",10],["B16","Centro Comunitario Los Cedros","Pereira","Edificacion comunitaria","Baja","T09",3],["B17","Centro Comunitario Las Acacias","Pereira","Edificacion comunitaria","Alta","T04",10],["B19","Casa Los Nogales","Manizales","Vivienda de baja altura","Media","T08",6],["B20","Casa Las Camelias","Manizales","Vivienda de baja altura","Baja","T10",3],["B21","Casa El Encanto","Manizales","Vivienda de baja altura","Alta","T10",10],["B22","Casa El Paraiso","Manizales","Vivienda de baja altura","Alta","T10",10],["B23","Edificio Los Arrayanes","Manizales","Edificio residencial","Media","T10",10],["B24","Edificio El Jardin","Manizales","Edificio residencial","Baja","T10",5],["B25","Edificio La Aurora","Manizales","Edificio residencial","Alta","T08",15],["B26","Edificio El Refugio","Manizales","Edificio residencial","Media","T10",10],["B27","Colegio La Primavera","Manizales","Institucion educativa","Alta","T08",16],["B28","Colegio El Porvenir","Manizales","Institucion educativa","Media","T08",11],["B29","Colegio La Colina","Manizales","Institucion educativa","Baja","T08",5],["B30","Centro Comunitario Los Pinos","Manizales","Edificacion comunitaria","Alta","T08",13],["B31","Centro Comunitario Los Robles","Manizales","Edificacion comunitaria","Media","T10",8],["B32","Casa La Florida","Armenia","Vivienda de baja altura","Baja","T05",2],["B33","Casa La Alameda","Armenia","Vivienda de baja altura","Alta","T05",8],["B35","Edificio Los Olivos","Armenia","Edificio residencial","Alta","T05",12],["B36","Colegio Los Arrayanes","Armenia","Institucion educativa","Alta","T05",18],["B37","Colegio La Aurora","Armenia","Institucion educativa","Alta","T05",18],["B38","Centro Comunitario La Primavera","Armenia","Edificacion comunitaria","Baja","T05",4],["B39","Centro Comunitario El Porvenir","Armenia","Edificacion comunitaria","Alta","T05",12]].map(([id,name,city,type,urgency,team,score]) => ({id,name,city,type,urgency,team,score}));
 
     const cop = value => "$" + new Intl.NumberFormat("es-CO", { maximumFractionDigits: 0 }).format(value);
     const cityBars = document.getElementById("cityBars");
@@ -511,10 +457,11 @@
       document.getElementById("scenarioName").textContent = d.name;
       document.getElementById("scenarioDescription").textContent = d.description;
       document.getElementById("scenarioStatus").textContent = d.status;
-      document.getElementById("scenarioScore").textContent = d.score;
-      document.getElementById("scenarioBuildings").textContent = d.buildings;
-      document.getElementById("scenarioCost").textContent = cop(d.cost);
-      document.getElementById("scenarioPeople").textContent = `${d.people} · ${d.teams}`;
+      document.getElementById("scenarioStatus").classList.toggle("is-infeasible", d.status === "Infactible");
+      document.getElementById("scenarioScore").textContent = d.score == null ? "—" : d.score;
+      document.getElementById("scenarioBuildings").textContent = d.buildings == null ? "—" : d.buildings;
+      document.getElementById("scenarioCost").textContent = d.cost == null ? "—" : cop(d.cost);
+      document.getElementById("scenarioPeople").textContent = d.people == null ? "—" : `${d.people} · ${d.teams}`;
       document.getElementById("scenarioFoot").innerHTML = `<strong>Lectura:</strong> ${d.foot}`;
       document.getElementById("scenarioCities").innerHTML = Object.entries(d.city).map(([city,count]) => `<span>${city}: ${count}</span>`).join("");
     }
@@ -569,4 +516,7 @@
   </script>
 </body>
 </html>
+
+
+
 
