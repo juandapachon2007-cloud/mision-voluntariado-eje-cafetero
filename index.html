@@ -318,7 +318,7 @@
       <div class="section-head">
         <div>
           <h2 id="scenario-title">Si cambian las prioridades</h2>
-          <p>Compare la solución base con dos presupuestos de prueba. El detalle operativo de abajo corresponde al plan base de $10 millones.</p>
+          <p>Explore cuatro recomendaciones de sensibilidad: dos buscan elevar Z y dos priorizan la cobertura y distribución de inspecciones. El detalle operativo de equipos sigue mostrando el plan base.</p>
         </div>
       </div>
       <div class="scenario-wrap">
@@ -327,9 +327,12 @@
           <select id="scenarioSelect" aria-controls="scenarioResult">
             <option value="base">Plan base · $10 millones</option>
             <option value="budget9">Presupuesto de prueba · $9 millones</option>
-            <option value="budget11">Presupuesto de prueba · $11 millones</option>
+            <option value="budget10_5">Mejorar Z · presupuesto $10,5 millones</option>
+            <option value="budget11">Mejorar Z · presupuesto $11 millones</option>
+            <option value="hours27">Distribución territorial · máximo 27 horas</option>
+            <option value="coverageArmenia">Prioridad Armenia · vivienda baja</option>
           </select>
-          <small>Las alternativas son resultados de escenarios, no cambios ya aprobados.</small>
+          <small>Se conserva el mismo modelo con 21 restricciones; solo cambian parámetros y límites existentes. Son propuestas para análisis, no cambios aprobados.</small>
         </div>
         <div class="scenario-result" id="scenarioResult" aria-live="polite">
           <div class="scenario-result-top">
@@ -339,8 +342,8 @@
           <div class="scenario-kpis">
             <div class="scenario-kpi"><span>Puntaje</span><strong id="scenarioScore">309</strong></div>
             <div class="scenario-kpi"><span>Edificios</span><strong id="scenarioBuildings">34</strong></div>
-            <div class="scenario-kpi"><span>Costo</span><strong id="scenarioCost">$9.900.000</strong></div>
-            <div class="scenario-kpi"><span>Personas · equipos</span><strong id="scenarioPeople">18 · 5</strong></div>
+            <div class="scenario-kpi"><span>Presupuesto máximo</span><strong id="scenarioBudget">$10.000.000</strong></div>
+            <div class="scenario-kpi"><span>Equipos</span><strong id="scenarioTeams">5</strong></div>
           </div>
           <div class="scenario-foot" id="scenarioFoot"><strong>Lectura:</strong> cumple las coberturas mínimas con $100.000 sin asignar.</div>
           <div class="mini-city" id="scenarioCities" aria-label="Distribución por ciudad"></div>
@@ -399,8 +402,8 @@
         <summary>¿Cómo se interpretan los escenarios?</summary>
         <div class="info-body">
           <ul>
-            <li>El caso base de $10 millones y la prueba de $11 millones tienen óptimo probado en GAMS. La prueba de $9 millones es infactible.</li>
-            <li>El escenario de $11 millones obtiene 339 puntos, 33 edificios, 19 voluntarios y un costo de $10.950.000. El de $9 millones no genera asignación factible.</li>
+            <li>El caso base y las cuatro recomendaciones tienen óptimo probado en GAMS. La prueba de $9 millones es infactible.</li>
+            <li>Las recomendaciones separan cambios presupuestales para elevar Z de cambios en horas y cobertura para orientar la distribución de inspecciones.</li>
             <li>Los presupuestos alternos son pruebas de sensibilidad, no cambios aprobados al presupuesto oficial.</li>
           </ul>
         </div>
@@ -422,14 +425,20 @@
 
   <footer class="shell">
     <div class="footer-inner">
-      <p><strong>Fuente y método:</strong> datos del proyecto y guía de misión suministrados; modelo entero resuelto con GAMS 25.0.3 y CPLEX. Esta página se actualizó con la solución base de GAMS y las dos pruebas de presupuesto de $9 y $11 millones.</p>
+      <p><strong>Fuente y método:</strong> datos del proyecto y guía de misión suministrados; modelo entero resuelto con GAMS 25.0.3 y CPLEX. Esta página presenta la solución base y cuatro escenarios de sensibilidad resueltos en GAMS. En todos se conservan las 21 restricciones originales; solo se modifican parámetros existentes.</p>
       <a class="to-top" href="#inicio">Volver arriba ↑</a>
     </div>
   </footer>
 
   <script>
-    const scenarios = {"base":{"name":"Plan base · presupuesto original","description":"Referencia resuelta con el presupuesto del modelo.","status":"Óptimo probado","score":309,"buildings":34,"cost":9900000,"people":18,"teams":5,"city":{"Pereira":14,"Manizales":13,"Armenia":7},"budget":10000000,"foot":"cumple las coberturas mínimas con $100.000 sin asignar."},"budget9":{"name":"Presupuesto de $9 millones","description":"Prueba de sensibilidad con todos los demás parámetros iguales.","status":"Infactible","score":null,"buildings":null,"cost":null,"people":null,"teams":null,"city":{},"budget":9000000,"foot":"no existe una asignación que cumpla simultáneamente todas las restricciones con este presupuesto."},"budget11":{"name":"Presupuesto de $11 millones","description":"Prueba de sensibilidad con todos los demás parámetros iguales.","status":"Óptimo probado","score":339,"buildings":33,"cost":10950000,"people":19,"teams":5,"city":{"Pereira":13,"Manizales":13,"Armenia":7},"budget":11000000,"foot":"obtiene 30 puntos más que el plan base con una edificación menos; quedan $50.000 sin utilizar."}};
-
+    const scenarios = {
+      base:{name:"Plan base · presupuesto original",description:"Referencia resuelta con los parámetros originales.",status:"Óptimo probado",score:309,buildings:34,teams:5,budget:10000000,city:{Pereira:14,Manizales:13,Armenia:7},foot:"34 inspecciones; cubre los mínimos establecidos en las 12 combinaciones ciudad–tipo."},
+      budget9:{name:"Presupuesto de $9 millones",description:"Prueba de sensibilidad con el resto de los parámetros base.",status:"Infactible",score:null,buildings:null,teams:null,budget:9000000,city:{},foot:"GAMS no encontró una asignación factible que cumpla todas las restricciones con este presupuesto."},
+      budget10_5:{name:"Presupuesto de $10,5 millones",description:"Recomendación para mejorar Z; solo aumenta el límite presupuestal existente.",status:"Óptimo probado",score:329,buildings:34,teams:5,budget:10500000,city:{Pereira:14,Manizales:13,Armenia:7},foot:"Z sube 20 puntos frente al caso base; se mantienen 34 edificios inspeccionados."},
+      budget11:{name:"Presupuesto de $11 millones",description:"Recomendación para mejorar Z; solo aumenta el límite presupuestal existente.",status:"Óptimo probado",score:339,buildings:33,teams:5,budget:11000000,city:{Pereira:13,Manizales:13,Armenia:7},foot:"Z sube 30 puntos. El modelo elige 33 edificios porque maximiza puntaje, no cantidad de edificios."},
+      hours27:{name:"Máximo de 27 horas por equipo",description:"Recomendación de cobertura territorial; cambia el límite de horas máximas de la restricción existente.",status:"Óptimo probado",score:327,buildings:36,teams:5,budget:10000000,city:{Pereira:15,Manizales:13,Armenia:8},foot:"Se inspeccionan dos edificios más que en la base: uno en Pereira y uno en Armenia. Se asignan 2 equipos a Pereira, 2 a Manizales y 1 a Armenia."},
+      coverageArmenia:{name:"Prioridad de vivienda baja en Armenia",description:"Aumenta de 40% a 67% el parámetro de cobertura existente para esa ciudad y tipo; se compara con el mismo presupuesto de $11 millones y máximo de 27 horas.",status:"Óptimo probado",score:353,buildings:37,teams:5,budget:11000000,city:{Pereira:16,Manizales:13,Armenia:8},foot:"La cobertura mínima pasa de 2 a 3 de las 3 viviendas bajas disponibles en Armenia. Frente al control comparable (Z = 356), Z baja 3 puntos y una inspección se reasigna desde edificaciones comunitarias."}
+    };
     const baseCity = [{"name":"Pereira","total":18,"base":14},{"name":"Manizales","total":13,"base":13},{"name":"Armenia","total":9,"base":7}];
 
     const teams = [{"id":"T04","name":"Equipo 4","city":"Pereira","people":4,"buildings":6,"hours":24,"points":63,"cost":2250000,"volunteers":["ADRIANA PERTEGAS","OSCAR PEÑARANDA","NICOLAS EDUARDO PINEDA","FELIPE ESTEBAN SALAZAR"],"sites":["Casa Los Cedros","Edificio Los Pinos","Colegio Los Cedros","Colegio El Mirador","Colegio Los Robles","Centro Comunitario Las Acacias"]},{"id":"T05","name":"Equipo 5","city":"Armenia","people":4,"buildings":7,"hours":24,"points":74,"cost":2250000,"volunteers":["FERNANDO ANTOLINEZ","RUTH LEAL","SANTIAGO ANDRES ROJAS","ALEJANDRO JOSE MEDINA"],"sites":["Casa La Florida","Casa La Alameda","Edificio Los Olivos","Colegio Los Arrayanes","Colegio La Aurora","Centro Comunitario La Primavera","Centro Comunitario El Porvenir"]},{"id":"T08","name":"Equipo 8","city":"Manizales","people":4,"buildings":6,"hours":24,"points":66,"cost":2250000,"volunteers":["YINEY CONTRERAS","ANDREINA ESPINEL","YAJAIRA VELOZA","MIGUEL ANGEL CARDENAS"],"sites":["Casa Los Nogales","Edificio La Aurora","Colegio La Primavera","Colegio El Porvenir","Colegio La Colina","Centro Comunitario Los Pinos"]},{"id":"T09","name":"Equipo 9","city":"Pereira","people":3,"buildings":8,"hours":21,"points":50,"cost":1600000,"volunteers":["RONALD BAEZ","VICTOR RODRIGUEZ","YANITH CUELLAR"],"sites":["Casa Las Acacias","Casa La Esperanza","Casa Los Robles","Casa Los Arrayanes","Casa Los Olivos","Edificio El Mirador","Edificio La Primavera","Centro Comunitario Los Cedros"]},{"id":"T10","name":"Equipo 10","city":"Manizales","people":3,"buildings":7,"hours":21,"points":56,"cost":1550000,"volunteers":["OLGA SUAREZ","SILVIA PLAZAS","LAURA VALENTINA CASTRO"],"sites":["Casa Las Camelias","Casa El Encanto","Casa El Paraiso","Edificio Los Arrayanes","Edificio El Jardin","Edificio El Refugio","Centro Comunitario Los Robles"]}];
@@ -460,8 +469,8 @@
       document.getElementById("scenarioStatus").classList.toggle("is-infeasible", d.status === "Infactible");
       document.getElementById("scenarioScore").textContent = d.score == null ? "—" : d.score;
       document.getElementById("scenarioBuildings").textContent = d.buildings == null ? "—" : d.buildings;
-      document.getElementById("scenarioCost").textContent = d.cost == null ? "—" : cop(d.cost);
-      document.getElementById("scenarioPeople").textContent = d.people == null ? "—" : `${d.people} · ${d.teams}`;
+      document.getElementById("scenarioBudget").textContent = cop(d.budget);
+      document.getElementById("scenarioTeams").textContent = d.teams == null ? "—" : d.teams;
       document.getElementById("scenarioFoot").innerHTML = `<strong>Lectura:</strong> ${d.foot}`;
       document.getElementById("scenarioCities").innerHTML = Object.entries(d.city).map(([city,count]) => `<span>${city}: ${count}</span>`).join("");
     }
@@ -516,6 +525,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
