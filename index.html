@@ -133,6 +133,8 @@
     .scenario-foot strong { color: white; }
     .mini-city { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
     .mini-city span { padding: 5px 9px; border-radius: 999px; background: rgba(255,255,255,.1); color: #edf6f1; font-size: 12px; }
+    #hoursComparison[hidden] { display: none; }
+    #hoursComparison tbody tr.is-selected { background: var(--mint-2); font-weight: 750; }
     .table-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 12px 0 15px; }
     .filters { display: flex; flex-wrap: wrap; gap: 9px; flex: 1; }
     .filters input { max-width: 320px; }
@@ -349,18 +351,18 @@
           <div class="mini-city" id="scenarioCities" aria-label="Distribución por ciudad"></div>
         </div>
       </div>
-      <article class="panel" style="margin-top:16px">
+      <article class="panel" id="hoursComparison" style="margin-top:16px" hidden>
         <h3>Comparación de sensibilidad: horas máximas por equipo</h3>
         <p class="panel-intro">Resultados de las corridas que aparecen en el informe. El límite de 24 horas corresponde al caso base; las otras filas modifican solo el máximo de horas.</p>
         <div class="table-wrap">
           <table style="min-width:780px">
             <thead><tr><th>Horas máximas</th><th>Puntaje Z</th><th>Mejora frente a la base</th><th>Equipos</th><th>Voluntarios</th><th>Edificaciones</th><th>Gasto</th></tr></thead>
             <tbody>
-              <tr><td>24</td><td>309</td><td>—</td><td>5</td><td>18</td><td>34 de 40</td><td>$9.900.000</td></tr>
-              <tr><td>28</td><td>333</td><td>+24 puntos (+7,8%)</td><td>5</td><td>18</td><td>36 de 40</td><td>$10.000.000</td></tr>
-              <tr><td>32</td><td>349</td><td>+40 puntos (+12,9%)</td><td>4</td><td>16</td><td>37 de 40</td><td>$9.000.000</td></tr>
-              <tr><td>40</td><td>364</td><td>+55 puntos (+17,8%)</td><td>4</td><td>16</td><td>39 de 40</td><td>$9.150.000</td></tr>
-              <tr><td>48</td><td>347</td><td>+38 puntos (+12,3%)</td><td>3</td><td>12</td><td>36 de 40</td><td>$7.000.000</td></tr>
+              <tr data-hours="24"><td>24</td><td>309</td><td>—</td><td>5</td><td>18</td><td>34 de 40</td><td>$9.900.000</td></tr>
+              <tr data-hours="28"><td>28</td><td>333</td><td>+24 puntos (+7,8%)</td><td>5</td><td>18</td><td>36 de 40</td><td>$10.000.000</td></tr>
+              <tr data-hours="32"><td>32</td><td>349</td><td>+40 puntos (+12,9%)</td><td>4</td><td>16</td><td>37 de 40</td><td>$9.000.000</td></tr>
+              <tr data-hours="40"><td>40</td><td>364</td><td>+55 puntos (+17,8%)</td><td>4</td><td>16</td><td>39 de 40</td><td>$9.150.000</td></tr>
+              <tr data-hours="48"><td>48</td><td>347</td><td>+38 puntos (+12,3%)</td><td>3</td><td>12</td><td>36 de 40</td><td>$7.000.000</td></tr>
             </tbody>
           </table>
         </div>
@@ -491,6 +493,10 @@
       document.getElementById("scenarioVolunteers").textContent = d.volunteers == null ? "—" : d.volunteers;
       document.getElementById("scenarioFoot").innerHTML = `<strong>Lectura:</strong> ${d.foot}`;
       document.getElementById("scenarioCities").innerHTML = Object.entries(d.city).map(([city,count]) => `<span>${city}: ${count}</span>`).join("");
+      const hoursComparison = document.getElementById("hoursComparison");
+      const hoursLimit = key === "hours40" ? "40" : key === "hours48" ? "48" : "";
+      hoursComparison.hidden = !hoursLimit;
+      hoursComparison.querySelectorAll("tbody tr").forEach(row => row.classList.toggle("is-selected", row.dataset.hours === hoursLimit));
     }
 
     function renderTeams() {
