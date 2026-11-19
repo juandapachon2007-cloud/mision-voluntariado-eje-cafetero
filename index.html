@@ -125,7 +125,7 @@
     .scenario-result p { margin: 5px 0 0; color: #d9e7e1; font-size: 14px; }
     .status-pill { padding: 6px 9px; border-radius: 999px; color: var(--green); background: var(--sun); font-size: 11px; font-weight: 850; white-space: nowrap; }
     .status-pill.is-infeasible { color: #8a2f28; background: #fbe2df; }
-    .scenario-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 19px; }
+    .scenario-kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 19px; }
     .scenario-kpi { padding: 13px; border: 1px solid rgba(255,255,255,.18); border-radius: 13px; background: rgba(255,255,255,.07); }
     .scenario-kpi span { display: block; color: #c9ddd4; font-size: 11px; }
     .scenario-kpi strong { display: block; margin-top: 4px; font-size: 20px; line-height: 1.15; }
@@ -307,9 +307,9 @@
           <p>Con las tarifas originales, el caso base tiene óptimo probado y cumple todos los mínimos definidos.</p>
         </article>
         <article class="recommend alt">
-          <div class="recommend-kicker">Prioridad: mayor puntaje</div>
-          <h4>La prueba de $11 millones alcanza 339 puntos</h4>
-          <p>Con un presupuesto hipotético de $11 millones, el modelo alcanza 339 puntos; cambia la composición del plan y deja $50.000 sin asignar.</p>
+          <div class="recommend-kicker">Cobertura total · informe</div>
+          <h4>Con $14,45 millones se alcanzan 369 puntos</h4>
+          <p>La recomendación inspecciona las 40 edificaciones con siete equipos y 25 voluntarios; completa la cobertura en Pereira y Armenia.</p>
         </article>
       </div>
     </section>
@@ -318,7 +318,7 @@
       <div class="section-head">
         <div>
           <h2 id="scenario-title">Si cambian las prioridades</h2>
-          <p>Explore cuatro recomendaciones de sensibilidad: dos buscan elevar Z y dos priorizan la cobertura y distribución de inspecciones. El detalle operativo de equipos sigue mostrando el plan base.</p>
+          <p>Estos cuatro escenarios corresponden a los análisis del informe: dos aumentos de presupuesto, una ampliación a 40 horas para elevar Z y una alternativa de 48 horas enfocada en reducir el costo. El detalle de equipos y personas sigue mostrando el plan base.</p>
         </div>
       </div>
       <div class="scenario-wrap">
@@ -326,13 +326,12 @@
           <label for="scenarioSelect">Elija un escenario</label>
           <select id="scenarioSelect" aria-controls="scenarioResult">
             <option value="base">Plan base · $10 millones</option>
-            <option value="budget9">Presupuesto de prueba · $9 millones</option>
-            <option value="budget10_5">Mejorar Z · presupuesto $10,5 millones</option>
-            <option value="budget11">Mejorar Z · presupuesto $11 millones</option>
-            <option value="hours27">Distribución territorial · máximo 27 horas</option>
-            <option value="coverageArmenia">Prioridad Armenia · vivienda baja</option>
+            <option value="budget10_55">Aumentar presupuesto · $10,55 millones</option>
+            <option value="hours40">Aumentar puntaje · máximo 40 horas</option>
+            <option value="hours48">Reducir costo · máximo 48 horas</option>
+            <option value="budget14_45">Cobertura total · presupuesto $14,45 millones</option>
           </select>
-          <small>Se conserva el mismo modelo con 21 restricciones; solo cambian parámetros y límites existentes. Son propuestas para análisis, no cambios aprobados.</small>
+          <small>Se muestran los cambios y resultados consignados en el informe. En 48 horas, el propio informe advierte que Z = 347 es una alternativa de menor costo, no el máximo puntaje posible.</small>
         </div>
         <div class="scenario-result" id="scenarioResult" aria-live="polite">
           <div class="scenario-result-top">
@@ -342,13 +341,31 @@
           <div class="scenario-kpis">
             <div class="scenario-kpi"><span>Puntaje</span><strong id="scenarioScore">309</strong></div>
             <div class="scenario-kpi"><span>Edificios</span><strong id="scenarioBuildings">34</strong></div>
-            <div class="scenario-kpi"><span>Presupuesto máximo</span><strong id="scenarioBudget">$10.000.000</strong></div>
+            <div class="scenario-kpi"><span>Gasto estimado</span><strong id="scenarioCost">$9.900.000</strong></div>
             <div class="scenario-kpi"><span>Equipos</span><strong id="scenarioTeams">5</strong></div>
+            <div class="scenario-kpi"><span>Voluntarios</span><strong id="scenarioVolunteers">18</strong></div>
           </div>
           <div class="scenario-foot" id="scenarioFoot"><strong>Lectura:</strong> cumple las coberturas mínimas con $100.000 sin asignar.</div>
           <div class="mini-city" id="scenarioCities" aria-label="Distribución por ciudad"></div>
         </div>
       </div>
+      <article class="panel" style="margin-top:16px">
+        <h3>Comparación de sensibilidad: horas máximas por equipo</h3>
+        <p class="panel-intro">Resultados de las corridas que aparecen en el informe. El límite de 24 horas corresponde al caso base; las otras filas modifican solo el máximo de horas.</p>
+        <div class="table-wrap">
+          <table style="min-width:780px">
+            <thead><tr><th>Horas máximas</th><th>Puntaje Z</th><th>Mejora frente a la base</th><th>Equipos</th><th>Voluntarios</th><th>Edificaciones</th><th>Gasto</th></tr></thead>
+            <tbody>
+              <tr><td>24</td><td>309</td><td>—</td><td>5</td><td>18</td><td>34 de 40</td><td>$9.900.000</td></tr>
+              <tr><td>28</td><td>333</td><td>+24 puntos (+7,8%)</td><td>5</td><td>18</td><td>36 de 40</td><td>$10.000.000</td></tr>
+              <tr><td>32</td><td>349</td><td>+40 puntos (+12,9%)</td><td>4</td><td>16</td><td>37 de 40</td><td>$9.000.000</td></tr>
+              <tr><td>40</td><td>364</td><td>+55 puntos (+17,8%)</td><td>4</td><td>16</td><td>39 de 40</td><td>$9.150.000</td></tr>
+              <tr><td>48</td><td>347</td><td>+38 puntos (+12,3%)</td><td>3</td><td>12</td><td>36 de 40</td><td>$7.000.000</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="panel-intro" style="margin:12px 0 0">El mayor puntaje de la tabla se obtiene con 40 horas. El escenario de 48 horas reduce el gasto, pero su Z es menor; el informe lo presenta como alternativa de bajo costo, no como máximo puntaje para ese límite.</p>
+      </article>
     </section>
 
     <section class="section shell" id="equipos" aria-labelledby="teams-title">
@@ -395,16 +412,17 @@
         <summary>¿Qué optimiza el modelo?</summary>
         <div class="info-body">
           <p>Maximiza el puntaje asignado a las inspecciones según ciudad, tipo de edificación y urgencia, sujeto al presupuesto, capacidades de los voluntarios, tamaño y horas de trabajo de cada equipo, y mínimos de cobertura.</p>
-          <p>Por eso, “más edificios” y “mayor puntaje” no siempre coinciden. Con $11 millones, por ejemplo, el modelo obtiene 339 puntos con 33 edificios, uno menos que en el caso base.</p>
+          <p>Por eso, “más edificios” y “mayor puntaje” no siempre coinciden. En la ampliación a $10,55 millones, por ejemplo, Z aumenta de 309 a 339 aunque se inspecciona una edificación menos: se priorizan las edificaciones de urgencia alta.</p>
         </div>
       </details>
       <details class="info">
         <summary>¿Cómo se interpretan los escenarios?</summary>
         <div class="info-body">
           <ul>
-            <li>El caso base y las cuatro recomendaciones tienen óptimo probado en GAMS. La prueba de $9 millones es infactible.</li>
-            <li>Las recomendaciones separan cambios presupuestales para elevar Z de cambios en horas y cobertura para orientar la distribución de inspecciones.</li>
-            <li>Los presupuestos alternos son pruebas de sensibilidad, no cambios aprobados al presupuesto oficial.</li>
+            <li>Las cifras de los escenarios se tomaron del informe y se comparan con el caso base: Z = 309, 34 edificaciones, cinco equipos, 18 voluntarios y gasto de $9.900.000.</li>
+            <li>Con 40 horas, el informe reporta Z = 364, 39 edificaciones, cuatro equipos, 16 voluntarios y gasto de $9.150.000.</li>
+            <li>La alternativa de 48 horas baja el gasto a $7.000.000 y reporta Z = 347. El informe aclara que ese puntaje no es el máximo posible para 48 horas, por lo que se presenta como alternativa de costo y no como mejora de Z frente a 40 horas.</li>
+            <li>Los presupuestos alternos y límites de horas son escenarios de análisis; no representan cambios aprobados al presupuesto oficial.</li>
           </ul>
         </div>
       </details>
@@ -425,19 +443,18 @@
 
   <footer class="shell">
     <div class="footer-inner">
-      <p><strong>Fuente y método:</strong> datos del proyecto y guía de misión suministrados; modelo entero resuelto con GAMS 25.0.3 y CPLEX. Esta página presenta la solución base y cuatro escenarios de sensibilidad resueltos en GAMS. En todos se conservan las 21 restricciones originales; solo se modifican parámetros existentes.</p>
+      <p><strong>Fuente y método:</strong> datos del proyecto, guía de misión e informe G7.Informe (2). El modelo entero se resolvió con GAMS 25.0.3 y CPLEX. Se presentan el caso base y los cuatro análisis de sensibilidad documentados en el informe; se modifican únicamente el presupuesto máximo o el límite de horas ya existente. La alternativa de 48 horas se identifica como una solución de menor costo y no como el máximo puntaje posible para ese límite.</p>
       <a class="to-top" href="#inicio">Volver arriba ↑</a>
     </div>
   </footer>
 
   <script>
     const scenarios = {
-      base:{name:"Plan base · presupuesto original",description:"Referencia resuelta con los parámetros originales.",status:"Óptimo probado",score:309,buildings:34,teams:5,budget:10000000,city:{Pereira:14,Manizales:13,Armenia:7},foot:"34 inspecciones; cubre los mínimos establecidos en las 12 combinaciones ciudad–tipo."},
-      budget9:{name:"Presupuesto de $9 millones",description:"Prueba de sensibilidad con el resto de los parámetros base.",status:"Infactible",score:null,buildings:null,teams:null,budget:9000000,city:{},foot:"GAMS no encontró una asignación factible que cumpla todas las restricciones con este presupuesto."},
-      budget10_5:{name:"Presupuesto de $10,5 millones",description:"Recomendación para mejorar Z; solo aumenta el límite presupuestal existente.",status:"Óptimo probado",score:329,buildings:34,teams:5,budget:10500000,city:{Pereira:14,Manizales:13,Armenia:7},foot:"Z sube 20 puntos frente al caso base; se mantienen 34 edificios inspeccionados."},
-      budget11:{name:"Presupuesto de $11 millones",description:"Recomendación para mejorar Z; solo aumenta el límite presupuestal existente.",status:"Óptimo probado",score:339,buildings:33,teams:5,budget:11000000,city:{Pereira:13,Manizales:13,Armenia:7},foot:"Z sube 30 puntos. El modelo elige 33 edificios porque maximiza puntaje, no cantidad de edificios."},
-      hours27:{name:"Máximo de 27 horas por equipo",description:"Recomendación de cobertura territorial; cambia el límite de horas máximas de la restricción existente.",status:"Óptimo probado",score:327,buildings:36,teams:5,budget:10000000,city:{Pereira:15,Manizales:13,Armenia:8},foot:"Se inspeccionan dos edificios más que en la base: uno en Pereira y uno en Armenia. Se asignan 2 equipos a Pereira, 2 a Manizales y 1 a Armenia."},
-      coverageArmenia:{name:"Prioridad de vivienda baja en Armenia",description:"Aumenta de 40% a 67% el parámetro de cobertura existente para esa ciudad y tipo; se compara con el mismo presupuesto de $11 millones y máximo de 27 horas.",status:"Óptimo probado",score:353,buildings:37,teams:5,budget:11000000,city:{Pereira:16,Manizales:13,Armenia:8},foot:"La cobertura mínima pasa de 2 a 3 de las 3 viviendas bajas disponibles en Armenia. Frente al control comparable (Z = 356), Z baja 3 puntos y una inspección se reasigna desde edificaciones comunitarias."}
+      base:{name:"Plan base · presupuesto original",description:"Referencia resuelta con los parámetros originales.",status:"Óptimo probado",score:309,buildings:34,teams:5,volunteers:18,cost:9900000,city:{Pereira:14,Manizales:13,Armenia:7},foot:"34 inspecciones; gasto de $9.900.000 frente al tope base de $10.000.000. Se cumplen los mínimos de cobertura establecidos."},
+      budget10_55:{name:"Aumentar presupuesto a $10,55 millones",description:"Se modifica únicamente el presupuesto máximo existente, de $10.000.000 a $10.550.000.",status:"Óptimo probado",score:339,buildings:33,teams:5,volunteers:19,cost:10550000,city:{Pereira:13,Manizales:13,Armenia:7},foot:"Z aumenta 30 puntos (+9,7%) y se cubren las 16 edificaciones de urgencia alta; se inspecciona una edificación menos que en la base. El gasto sube $650.000 porque la base dejaba $100.000 sin usar. Pereira alcanza 143/160 puntos y Manizales y Armenia conservan sus asignaciones."},
+      hours40:{name:"Aumentar el máximo a 40 horas",description:"Se amplía de 24 a 40 horas el límite máximo existente por equipo; las demás condiciones permanecen iguales.",status:"Óptimo reportado",score:364,buildings:39,teams:4,volunteers:16,cost:9150000,city:{Pereira:18,Manizales:12,Armenia:9},foot:"Z aumenta 55 puntos (+17,8%) frente a la base. Se agregan seis inspecciones y solo queda fuera el Colegio La Colina. Pereira y Armenia alcanzan cobertura total; Manizales queda en 12/13. Se organizan cuatro equipos de cuatro voluntarios y el gasto baja $750.000."},
+      hours48:{name:"Alternativa de menor costo · máximo de 48 horas",description:"Se amplía el máximo de 24 a 48 horas por equipo para reducir equipos, voluntarios y gasto.",status:"Alternativa de menor costo",score:347,buildings:36,teams:3,volunteers:12,cost:7000000,city:{Pereira:14,Manizales:13,Armenia:9},foot:"El gasto baja $2.900.000 (29,3%) frente a la base y Z queda 38 puntos por encima de ella. Se emplean tres equipos, uno por ciudad, y quedan cuatro edificaciones sin inspeccionar (22 puntos). Advertencia del informe: Z = 347 no es el máximo posible con 48 horas; el escenario de 40 horas alcanza 364. Debe leerse como alternativa de menor costo, no como mejora de puntaje frente a 40 horas."},
+      budget14_45:{name:"Aumentar presupuesto a $14,45 millones",description:"Se aumenta únicamente el presupuesto máximo de $10.000.000 a $14.450.000.",status:"Óptimo probado",score:369,buildings:40,teams:7,volunteers:25,cost:14450000,city:{Pereira:18,Manizales:13,Armenia:9},foot:"Z aumenta 60 puntos (+19,4%) y se completan las 40 inspecciones. Pereira pasa de 14/18 a 18/18, Armenia de 7/9 a 9/9 y Manizales conserva 13/13. Se conforman tres equipos en Pereira, dos en Manizales y dos en Armenia; el presupuesto se utiliza por completo."}
     };
     const baseCity = [{"name":"Pereira","total":18,"base":14},{"name":"Manizales","total":13,"base":13},{"name":"Armenia","total":9,"base":7}];
 
@@ -469,8 +486,9 @@
       document.getElementById("scenarioStatus").classList.toggle("is-infeasible", d.status === "Infactible");
       document.getElementById("scenarioScore").textContent = d.score == null ? "—" : d.score;
       document.getElementById("scenarioBuildings").textContent = d.buildings == null ? "—" : d.buildings;
-      document.getElementById("scenarioBudget").textContent = cop(d.budget);
+      document.getElementById("scenarioCost").textContent = cop(d.cost);
       document.getElementById("scenarioTeams").textContent = d.teams == null ? "—" : d.teams;
+      document.getElementById("scenarioVolunteers").textContent = d.volunteers == null ? "—" : d.volunteers;
       document.getElementById("scenarioFoot").innerHTML = `<strong>Lectura:</strong> ${d.foot}`;
       document.getElementById("scenarioCities").innerHTML = Object.entries(d.city).map(([city,count]) => `<span>${city}: ${count}</span>`).join("");
     }
